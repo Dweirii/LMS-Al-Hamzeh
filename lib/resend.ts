@@ -1,3 +1,3 @@
 import { Resend } from "resend";
 import { env } from "./env";
-export const resend = new Resend(env.RESEND_API_SECRET_KEY);
+export const resend = new Resend(env.RESEND_API_KEY);
