@@ -13,6 +13,7 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
+  IconSchool,
 } from "@tabler/icons-react";
 import Logo from "@/public/logo.png";
 
@@ -57,6 +58,11 @@ const data = {
       title: "User Management",
       url: "/admin/user-management",
       icon: IconUsers,
+    },
+    {
+      title: "Students",
+      url: "/admin/students",
+      icon: IconSchool,
     },
   ],
   navClouds: [
