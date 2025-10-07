@@ -22,6 +22,14 @@ export async function adminGetCourses() {
       price: true,
       fileKey: true,
       slug: true,
+      university: true,
+      instructor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        }
+      },
     },
   });
 

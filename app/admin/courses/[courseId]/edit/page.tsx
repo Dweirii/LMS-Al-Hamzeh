@@ -9,12 +9,17 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditCourseForm } from "./_components/EditCourseForm";
 import { CourseStructure } from "./_components/CourseStructure";
+import { getInstructors } from "../../create/actions";
 
 type Params = Promise<{ courseId: string }>;
 
 export default async function EditRoute({ params }: { params: Params }) {
   const { courseId } = await params;
-  const data = await adminGetCourse(courseId);
+  const [data, instructorsResult] = await Promise.all([
+    adminGetCourse(courseId),
+    getInstructors()
+  ]);
+  const instructors = instructorsResult.data || [];
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">
@@ -36,7 +41,7 @@ export default async function EditRoute({ params }: { params: Params }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <EditCourseForm data={data} />
+              <EditCourseForm data={data} instructors={instructors} />
             </CardContent>
           </Card>
         </TabsContent>

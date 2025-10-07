@@ -18,7 +18,9 @@ import {
   School,
   TimerIcon,
   Trash2,
+  GraduationCap,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -82,14 +84,36 @@ export function AdminCourseCard({ data }: iAppProps) {
           {data.smallDescription}
         </p>
 
-        <div className="mt-4 flex items-center gap-x-5">
-          <div className="flex items-center gap-x-2">
-            <TimerIcon className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-            <p className="text-sm text-muted-foreground">{data.duration}h</p>
+        <div className="mt-4 space-y-3">
+          {/* Instructor and University Info */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-x-2">
+              <GraduationCap className="size-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                {data.instructor ? data.instructor.name : "Unassigned"}
+              </p>
+            </div>
+            <Badge 
+              variant={data.university === "UJ" ? "default" : "secondary"}
+              className={data.university === "UJ" 
+                ? "bg-green-100 text-green-800 border-green-200" 
+                : "bg-blue-100 text-blue-800 border-blue-200"
+              }
+            >
+              {data.university === "UJ" ? "UJ" : "PETRA"}
+            </Badge>
           </div>
-          <div className="flex items-center gap-x-2">
-            <School className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-            <p className="text-sm text-muted-foreground">{data.level}</p>
+
+          {/* Course Details */}
+          <div className="flex items-center gap-x-5">
+            <div className="flex items-center gap-x-2">
+              <TimerIcon className="size-6 p-1 rounded-md text-primary bg-primary/10" />
+              <p className="text-sm text-muted-foreground">{data.duration}h</p>
+            </div>
+            <div className="flex items-center gap-x-2">
+              <School className="size-6 p-1 rounded-md text-primary bg-primary/10" />
+              <p className="text-sm text-muted-foreground">{data.level}</p>
+            </div>
           </div>
         </div>
 

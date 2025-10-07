@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-
 import {
   courseCategories,
   courseLevels,
@@ -35,41 +34,39 @@ import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
 import { useTransition } from "react";
 import { tryCatch } from "@/hooks/try-catch";
-//import { CreateCourse } from "./actions";
+import { CreateCourse } from "../actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { editCourse } from "../actions";
-import { AdminCourseSingularType } from "@/app/data/admin/admin-get-course";
-import { InstructorOption } from "../../../create/actions";
+import { useConfetti } from "@/hooks/use-confetti";
+import { InstructorOption } from "../actions";
 
-interface iAppProps {
-  data: AdminCourseSingularType;
+interface CourseCreationFormProps {
   instructors: InstructorOption[];
 }
 
-export function EditCourseForm({ data, instructors }: iAppProps) {
+export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
-  // 1. Define your form.
+  const { triggerConfetti } = useConfetti();
+
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
-      title: data.title,
-      description: data.description,
-      fileKey: data.fileKey,
-      price: data.price,
-      duration: data.duration,
-      level: data.level,
-      category: data.category as CourseSchemaType["category"],
-      status: data.status,
-      slug: data.slug,
-      smallDescription: data.smallDescription,
-      instructorId: data.instructor?.id || "no-instructor",
-      university: data.university,
+      title: "",
+      description: "",
+      fileKey: "",
+      price: 0,
+      duration: 0,
+      level: "Beginner",
+      category: "Health & Fitness",
+      status: "Draft",
+      slug: "",
+      smallDescription: "",
+      instructorId: "no-instructor",
+      university: "UJ",
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: CourseSchemaType) {
     startTransition(async () => {
       // Convert "no-instructor" to empty string for database
@@ -78,9 +75,7 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
         instructorId: values.instructorId === "no-instructor" ? "" : values.instructorId
       };
       
-      const { data: result, error } = await tryCatch(
-        editCourse(processedValues, data.id)
-      );
+      const { data: result, error } = await tryCatch(CreateCourse(processedValues));
 
       if (error) {
         toast.error("An unexpected error occurred. Please try again.");
@@ -89,6 +84,7 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
 
       if (result.status === "success") {
         toast.success(result.message);
+        triggerConfetti();
         form.reset();
         router.push("/admin/courses");
       } else if (result.status === "error") {
@@ -96,6 +92,7 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
       }
     });
   }
+
   return (
     <Form {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
@@ -133,9 +130,7 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
             className="w-fit"
             onClick={() => {
               const titleValue = form.getValues("title");
-
               const slug = slugify(titleValue);
-
               form.setValue("slug", slug, { shouldValidate: true });
             }}
           >
@@ -192,94 +187,6 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
             </FormItem>
           )}
         />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Category</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {courseCategories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="level"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Level</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Value" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {courseLevels.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Duration (hours)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Duration" type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Price ($)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Price" type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
 
         {/* Instructor and University Selection */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -347,27 +254,119 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
           />
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {courseCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="level"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Level</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Level" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {courseLevels.map((level) => (
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="duration"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Duration (hours)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Duration"
+                    type="number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Price ($)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Price" type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="status"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Status" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {courseStatus.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                  {courseStatus.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-
               <FormMessage />
             </FormItem>
           )}
@@ -376,12 +375,12 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
         <Button type="submit" disabled={pending}>
           {pending ? (
             <>
-              Updating...
+              Creating...
               <Loader2 className="animate-spin ml-1" />
             </>
           ) : (
             <>
-              Update Course <PlusIcon className="ml-1" size={16} />
+              Create Course <PlusIcon className="ml-1" size={16} />
             </>
           )}
         </Button>

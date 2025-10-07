@@ -7,10 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//
+// ────────────────────────────────────────────────
+//   USER & AUTH MODELS
+// ────────────────────────────────────────────────
+//
+
 model User {
   id             String           @id
   name           String
-  email          String
+  email          String           @unique
   emailVerified  Boolean
   image          String?
   createdAt      DateTime
@@ -28,24 +34,24 @@ model User {
   banReason  String?
   banExpires DateTime?
 
-  @@unique([email])
+  // Instructor relation (reverse)
+  instructorCourses Course[] @relation("InstructorCourses")
+
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   impersonatedBy String?
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -79,31 +85,48 @@ model Verification {
   @@map("verification")
 }
 
+//
+// ────────────────────────────────────────────────
+//   COURSE STRUCTURE MODELS
+// ────────────────────────────────────────────────
+//
+
 model Course {
-  id String @id @default(uuid())
-
-  title       String
-  description String
-  fileKey     String
-  price       Int
-  duration    Int
-  level       CourseLevel @default(Beginner)
-
-  stripePriceId String @unique
-
+  id               String        @id @default(uuid())
+  title            String
+  description      String
+  fileKey          String
+  price            Int
+  duration         Int
+  level            CourseLevel   @default(Beginner)
+  stripePriceId    String        @unique
   category         String
   smallDescription String
-  slug             String @unique
+  slug             String        @unique
+  status           CourseStatus  @default(Draft)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  status CourseStatus @default(Draft)
+  // Owner relation (creator)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  // Instructor relation (optional)
+  instructor   User?   @relation("InstructorCourses", fields: [instructorId], references: [id])
+  instructorId String?
+
+  // University (enum)
+  university University @default(UJ)
 
   chapter    Chapter[]
   enrollment Enrollment[]
+
+  @@map("course")
+}
+
+enum University {
+  UJ      // University of Jordan
+  PETRA   // Petra University
 }
 
 enum CourseLevel {
@@ -119,48 +142,52 @@ enum CourseStatus {
 }
 
 model Chapter {
-  id String @id @default(uuid())
-
-  title    String
-  position Int
-
+  id        String   @id @default(uuid())
+  title     String
+  position  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  String
+
+  Course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
 
   lessons Lesson[]
 }
 
 model Lesson {
-  id String @id @default(uuid())
-
+  id           String   @id @default(uuid())
   title        String
   description  String?
   thumbnailKey String?
   videoKey     String?
   position     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   Chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String
 
   lessonProgress LessonProgress[]
 }
 
+//
+// ────────────────────────────────────────────────
+//   ENROLLMENT & PROGRESS MODELS
+// ────────────────────────────────────────────────
+//
+
 model Enrollment {
-  id String @id @default(uuid())
+  id        String             @id @default(uuid())
+  amount    Int
+  status    EnrollmentStatus   @default(Pending)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
-  amount Int
-  status EnrollmentStatus @default(Pending)
+  Course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   @@unique([userId, courseId])
 }
@@ -172,15 +199,14 @@ enum EnrollmentStatus {
 }
 
 model LessonProgress {
-  id String @id @default(uuid())
-
-  completed Boolean @default(false)
-
+  id        String   @id @default(uuid())
+  completed Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
+
   Lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId String
 

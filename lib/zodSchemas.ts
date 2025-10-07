@@ -4,6 +4,8 @@ export const courseLevels = ["Beginner", "Intermediate", "Advanced"] as const;
 
 export const courseStatus = ["Draft", "Published", "Archived"] as const;
 
+export const universities = ["UJ", "PETRA"] as const;
+
 export const courseCategories = [
   "Development",
   "Business",
@@ -57,6 +59,11 @@ export const courseSchema = z.object({
 
   status: z.enum(courseStatus, {
     message: "Status is required",
+  }),
+  
+  instructorId: z.string().uuid({ message: "Invalid instructor ID" }).optional(),
+  university: z.enum(universities, {
+    message: "University is required",
   }),
 });
 

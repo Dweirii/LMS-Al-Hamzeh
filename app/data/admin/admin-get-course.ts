@@ -22,6 +22,14 @@ export async function adminGetCourse(id: string) {
       slug: true,
       smallDescription: true,
       category: true,
+      university: true,
+      instructor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        }
+      },
       chapter: {
         select: {
           id: true,

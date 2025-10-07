@@ -9,6 +9,42 @@ import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
 
+export interface InstructorOption {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export async function getInstructors(): Promise<ApiResponse & { data?: InstructorOption[] }> {
+  await requireAdmin();
+  try {
+    const instructors = await prisma.user.findMany({
+      where: {
+        role: "instructor"
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+      orderBy: {
+        name: "asc"
+      }
+    });
+
+    return {
+      status: "success",
+      message: "Instructors retrieved successfully",
+      data: instructors
+    };
+  } catch {
+    return {
+      status: "error",
+      message: "Failed to retrieve instructors",
+    };
+  }
+}
+
 const aj = arcjet.withRule(
   fixedWindow({
     mode: "LIVE",
@@ -65,6 +101,7 @@ export async function CreateCourse(
         ...validation.data,
         userId: session?.user.id as string,
         stripePriceId: data.default_price as string,
+        instructorId: validation.data.instructorId || null,
       },
     });
 
