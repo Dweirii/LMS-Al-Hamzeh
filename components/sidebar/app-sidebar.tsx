@@ -54,8 +54,8 @@ const data = {
       icon: IconFolder,
     },
     {
-      title: "Team",
-      url: "#",
+      title: "User Management",
+      url: "/admin/user-management",
       icon: IconUsers,
     },
   ],
