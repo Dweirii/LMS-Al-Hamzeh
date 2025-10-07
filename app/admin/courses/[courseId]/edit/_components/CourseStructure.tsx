@@ -33,6 +33,7 @@ import {
   ChevronRight,
   FileText,
   GripVertical,
+  Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -42,6 +43,13 @@ import { NewChapterModal } from "./NewChapterModal";
 import { NewLessonModal } from "./NewLessonModal";
 import { DeleteLesson } from "./DeleteLesson";
 import { DeleteChapter } from "./DeleteChapter";
+import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface iAppProps {
   data: AdminCourseSingularType;
@@ -58,6 +66,7 @@ interface SortableItemProps {
 }
 
 export function CourseStructure({ data }: iAppProps) {
+  const router = useRouter();
   const initialItems =
     data.chapter.map((chapter) => ({
       id: chapter.id,
@@ -277,6 +286,10 @@ export function CourseStructure({ data }: iAppProps) {
     );
   }
 
+  function handleEditLesson(lessonId: string, chapterId: string) {
+    router.push(`/admin/courses/${data.id}/${chapterId}/${lessonId}`);
+  }
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -365,11 +378,30 @@ export function CourseStructure({ data }: iAppProps) {
                                       </Link>
                                     </div>
 
-                                    <DeleteLesson
-                                      chapterId={item.id}
-                                      courseId={data.id}
-                                      lessonId={lesson.id}
-                                    />
+                                    <div className="flex items-center gap-1">
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => handleEditLesson(lesson.id, item.id)}
+                                              className="h-8 w-8 p-0"
+                                            >
+                                              <Pencil className="size-4" />
+                                            </Button>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            <p>Edit Lesson</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                      <DeleteLesson
+                                        chapterId={item.id}
+                                        courseId={data.id}
+                                        lessonId={lesson.id}
+                                      />
+                                    </div>
                                   </div>
                                 )}
                               </SortableItem>

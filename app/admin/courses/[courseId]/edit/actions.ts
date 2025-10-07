@@ -214,7 +214,7 @@ export async function createChapter(
 
 export async function createLesson(
   values: ChapterSchemaType
-): Promise<ApiResponse> {
+): Promise<ApiResponse & { lessonId?: string }> {
   await requireAdmin();
   try {
     const result = lessonSchema.safeParse(values);
@@ -225,6 +225,8 @@ export async function createLesson(
         message: "Invalid Data",
       };
     }
+
+    let createdLessonId: string;
 
     await prisma.$transaction(async (tx) => {
       const maxPos = await tx.lesson.findFirst({
@@ -239,7 +241,7 @@ export async function createLesson(
         },
       });
 
-      await tx.lesson.create({
+      const createdLesson = await tx.lesson.create({
         data: {
           title: result.data.name,
           description: result.data.description,
@@ -249,6 +251,8 @@ export async function createLesson(
           position: (maxPos?.position ?? 0) + 1,
         },
       });
+
+      createdLessonId = createdLesson.id;
     });
 
     revalidatePath(`/admin/courses/${result.data.courseId}/edit`);
@@ -256,6 +260,7 @@ export async function createLesson(
     return {
       status: "success",
       message: "Lesson created successfully",
+      lessonId: createdLessonId!,
     };
   } catch {
     return {
