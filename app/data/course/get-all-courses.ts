@@ -21,6 +21,14 @@ export async function getAllCourses() {
       level: true,
       duration: true,
       category: true,
+      university: true,
+      instructor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        }
+      },
     },
   });
 

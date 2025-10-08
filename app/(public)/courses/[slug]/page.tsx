@@ -16,6 +16,8 @@ import {
   IconChevronDown,
   IconClock,
   IconPlayerPlay,
+  IconUser,
+  IconBuilding,
 } from "@tabler/icons-react";
 import { CheckIcon } from "lucide-react";
 import Image from "next/image";
@@ -67,6 +69,22 @@ export default async function SlugPage({ params }: { params: Params }) {
             <Badge className="flex items-center gap-1 px-3 py-1">
               <IconClock className="size-4" />
               <span>{course.duration} hours</span>
+            </Badge>
+            {course.instructor && (
+              <Badge className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 border-blue-200">
+                <IconUser className="size-4" />
+                <span>{course.instructor.name}</span>
+              </Badge>
+            )}
+            <Badge 
+              className={`flex items-center gap-1 px-3 py-1 ${
+                course.university === "UJ" 
+                  ? "bg-green-100 text-green-800 border-green-200" 
+                  : "bg-blue-100 text-blue-800 border-blue-200"
+              }`}
+            >
+              <IconBuilding className="size-4" />
+              <span>{course.university === "UJ" ? "University of Jordan" : "Petra University"}</span>
             </Badge>
           </div>
 
@@ -229,6 +247,32 @@ export default async function SlugPage({ params }: { params: Params }) {
                           0
                         ) || 0}{" "}
                         Lessons
+                      </p>
+                    </div>
+                  </div>
+
+                  {course.instructor && (
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <IconUser className="size-4" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Instructor</p>
+                        <p className="text-sm text-muted-foreground">
+                          {course.instructor.name}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <IconBuilding className="size-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">University</p>
+                      <p className="text-sm text-muted-foreground">
+                        {course.university === "UJ" ? "University of Jordan" : "Petra University"}
                       </p>
                     </div>
                   </div>

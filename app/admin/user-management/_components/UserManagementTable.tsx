@@ -151,6 +151,8 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
         return "destructive";
       case "user":
         return "secondary";
+      case "instructor":
+        return "default";
     }
   };
 
@@ -258,6 +260,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                       <SelectContent>
                         <SelectItem value="user">User</SelectItem>
                         <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="instructor">Instructor</SelectItem>
                       </SelectContent>
                     </Select>
 
