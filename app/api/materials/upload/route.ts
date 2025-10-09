@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { S3 } from "@/lib/S3Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { env } from "@/lib/env";
 
 export async function POST(request: NextRequest) {
   try {
