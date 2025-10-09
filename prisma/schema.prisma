@@ -120,6 +120,7 @@ model Course {
 
   chapter    Chapter[]
   enrollment Enrollment[]
+  materials  Material[]
 
   @@map("course")
 }
@@ -211,4 +212,23 @@ model LessonProgress {
   lessonId String
 
   @@unique([userId, lessonId])
+}
+
+//
+// ────────────────────────────────────────────────
+//   MATERIALS MODEL
+// ────────────────────────────────────────────────
+//
+
+model Material {
+  id          String   @id @default(uuid())
+  title       String
+  fileKey     String
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("material")
 }

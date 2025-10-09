@@ -1,0 +1,68 @@
+import { prisma } from "@/lib/db";
+
+export async function getMaterials() {
+  try {
+    const materials = await prisma.material.findMany({
+      include: {
+        course: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return materials;
+  } catch (error) {
+    console.error("Error fetching materials:", error);
+    return [];
+  }
+}
+
+export async function getMaterialById(id: string) {
+  try {
+    const material = await prisma.material.findUnique({
+      where: { id },
+      include: {
+        course: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    return material;
+  } catch (error) {
+    console.error("Error fetching material:", error);
+    return null;
+  }
+}
+
+export async function getCourses() {
+  try {
+    const courses = await prisma.course.findMany({
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+      },
+      orderBy: {
+        title: "asc",
+      },
+    });
+
+    return courses;
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    return [];
+  }
+}
+
