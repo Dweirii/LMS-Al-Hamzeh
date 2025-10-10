@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { tryCatch } from "@/hooks/try-catch";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { BookIcon, CheckCircle } from "lucide-react";
-import { useTransition } from "react";
+import { useTransition, useEffect, useRef } from "react";
 import { markLessonComplete } from "../actions";
 import { toast } from "sonner";
 import { useConfetti } from "@/hooks/use-confetti";
@@ -28,6 +28,79 @@ export function CourseContent({ data }: iAppProps) {
   }) {
     const videoUrl = useConstructUrl(videoKey);
     const thumbnailUrl = useConstructUrl(thumbnailKey);
+    const lastWarningTime = useRef<number>(0);
+
+    useEffect(() => {
+      // Show warning toast with cooldown (once every 10 seconds)
+      const showProtectionWarning = () => {
+        const now = Date.now();
+        if (now - lastWarningTime.current > 10000) {
+          toast.error("⚠️ Content Protected", {
+            description: "This content is protected by copyright. Unauthorized download, recording, or distribution may result in legal action.",
+            duration: 5000,
+          });
+          lastWarningTime.current = now;
+        }
+      };
+
+      // Detect DevTools opening via size change detection
+      const detectDevTools = () => {
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        
+        if (widthThreshold || heightThreshold) {
+          showProtectionWarning();
+        }
+      };
+
+      // Keyboard shortcuts detection
+      const handleKeyDown = (e: KeyboardEvent) => {
+        // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i")) ||
+          (e.ctrlKey && e.shiftKey && (e.key === "J" || e.key === "j")) ||
+          (e.ctrlKey && e.shiftKey && (e.key === "C" || e.key === "c")) ||
+          (e.ctrlKey && (e.key === "U" || e.key === "u"))
+        ) {
+          e.preventDefault();
+          showProtectionWarning();
+        }
+
+        // Cmd+Option+I, Cmd+Option+J, Cmd+Option+C for Mac
+        if (
+          (e.metaKey && e.altKey && (e.key === "I" || e.key === "i")) ||
+          (e.metaKey && e.altKey && (e.key === "J" || e.key === "j")) ||
+          (e.metaKey && e.altKey && (e.key === "C" || e.key === "c"))
+        ) {
+          e.preventDefault();
+          showProtectionWarning();
+        }
+      };
+
+      // Right-click detection
+      const handleContextMenu = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("video")) {
+          showProtectionWarning();
+        }
+      };
+
+      // Check for DevTools periodically
+      const devToolsInterval = setInterval(detectDevTools, 1000);
+
+      // Add event listeners
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("contextmenu", handleContextMenu);
+
+      // Cleanup
+      return () => {
+        clearInterval(devToolsInterval);
+        document.removeEventListener("keydown", handleKeyDown);
+        document.removeEventListener("contextmenu", handleContextMenu);
+      };
+    }, []);
 
     if (!videoKey) {
       return (
@@ -41,15 +114,23 @@ export function CourseContent({ data }: iAppProps) {
     }
 
     return (
-      <div className="aspect-video bg-black rounded-lg relative overflow-hidden">
+      <div className="aspect-video bg-black rounded-lg relative overflow-hidden shadow-xl">
         <video
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           controls
+          controlsList="nodownload noplaybackrate"
+          disablePictureInPicture={false}
           poster={thumbnailUrl}
+          preload="metadata"
+          playsInline
+          onContextMenu={(e) => e.preventDefault()}
+          style={{
+            maxHeight: '100%',
+            width: '100%',
+            display: 'block',
+          }}
         >
           <source src={videoUrl} type="video/mp4" />
-          <source src={videoUrl} type="video/webm" />
-          <source src={videoUrl} type="video/ogg" />
           Your browser does not support the video tag.
         </video>
       </div>
