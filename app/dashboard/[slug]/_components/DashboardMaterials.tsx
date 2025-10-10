@@ -15,6 +15,7 @@ import {
   Maximize2
 } from "lucide-react";
 import { toast } from "sonner";
+import { SecurePDFViewer } from "@/components/ui/SecurePDFViewer";
 
 interface Material {
   id: string;
@@ -232,12 +233,10 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
             )}
             
             {pdfUrl && !loadingPdf && !pdfError && (
-              <iframe
-                src={pdfUrl}
-                className="w-full h-full border-0"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
-                title={`PDF Viewer - ${viewingMaterial.title}`}
-                onContextMenu={(e) => e.preventDefault()}
+              <SecurePDFViewer 
+                pdfUrl={pdfUrl} 
+                title={viewingMaterial.title}
+                className="h-full border-0"
               />
             )}
           </div>

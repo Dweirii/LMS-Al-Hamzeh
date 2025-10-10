@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent} from "@/components/ui/card";
 import { 
-  FileText, 
-  Calendar
+  FileText
 } from "lucide-react";
-import { MaterialCard } from "./MaterialCard";
+import { MaterialCard } from "@/app/admin/materials/_components/MaterialCard";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Material {
   id: string;
   title: string;

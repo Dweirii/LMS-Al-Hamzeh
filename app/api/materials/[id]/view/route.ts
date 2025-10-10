@@ -32,7 +32,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const viewUrl = await getSignedUrl(S3, command, { expiresIn: 3600 });
 
     // Return JSON instead of redirect to avoid Chrome blocking in sandboxed iframe
-    return NextResponse.json({ url: viewUrl });
+    return NextResponse.json({ url: viewUrl }, {
+      headers: {
+        'X-Frame-Options': 'SAMEORIGIN',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   } catch (error) {
     console.error("Material view error:", error);
     return NextResponse.json(
