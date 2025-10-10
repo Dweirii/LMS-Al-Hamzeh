@@ -31,7 +31,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     });
     const viewUrl = await getSignedUrl(S3, command, { expiresIn: 3600 });
 
-    return NextResponse.redirect(viewUrl);
+    // Return JSON instead of redirect to avoid Chrome blocking in sandboxed iframe
+    return NextResponse.json({ url: viewUrl });
   } catch (error) {
     console.error("Material view error:", error);
     return NextResponse.json(

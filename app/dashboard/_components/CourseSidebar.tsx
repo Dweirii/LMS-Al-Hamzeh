@@ -8,9 +8,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
-import { ChevronDown, Play } from "lucide-react";
+import { ChevronDown, Play, BookOpen } from "lucide-react";
 import { LessonItem } from "./LessonItem";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCourseProgress } from "@/hooks/use-course-progress";
 
 interface iAppProps {
@@ -19,10 +19,15 @@ interface iAppProps {
 
 export function CourseSidebar({ course }: iAppProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const currentLessonId = pathname.split("/").pop();
 
   const { completedLessons, totalLessons, progressPercentage } =
     useCourseProgress({ courseData: course });
+  
+  const handleViewMaterials = () => {
+    router.push(`/dashboard/${course.slug}/materials`);
+  };
   return (
     <div className="flex flex-col h-full">
       <div className="pb-4 pr-4 border-b border-border">
@@ -94,6 +99,18 @@ export function CourseSidebar({ course }: iAppProps) {
             </CollapsibleContent>
           </Collapsible>
         ))}
+      </div>
+
+      {/* Materials Section */}
+      <div className="mt-auto pt-4 pr-4 border-t border-border">
+        <Button
+          onClick={handleViewMaterials}
+          variant="outline"
+          className="w-full gap-2 h-auto py-3"
+        >
+          <BookOpen className="h-4 w-4" />
+          <span>Course Materials</span>
+        </Button>
       </div>
     </div>
   );

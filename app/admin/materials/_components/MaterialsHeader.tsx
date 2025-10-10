@@ -38,10 +38,12 @@ export function MaterialsHeader({ courses = [] }: MaterialsHeaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsUploading(true);
     
     try {
+      const formData = new FormData(e.currentTarget);
       const title = formData.get("title") as string;
       const courseId = formData.get("courseId") as string;
       const file = formData.get("file") as File;
@@ -102,7 +104,7 @@ export function MaterialsHeader({ courses = [] }: MaterialsHeaderProps) {
           <DialogHeader>
             <DialogTitle>Add New Material</DialogTitle>
           </DialogHeader>
-          <form action={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
               <Input

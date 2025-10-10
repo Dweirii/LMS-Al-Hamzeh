@@ -46,6 +46,34 @@ export async function getMaterialById(id: string) {
   }
 }
 
+export async function getMaterialsByCourseId(courseId: string) {
+  try {
+    const materials = await prisma.material.findMany({
+      where: {
+        courseId: courseId,
+        isVisible: true,
+      },
+      include: {
+        course: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return materials;
+  } catch (error) {
+    console.error("Error fetching materials by course:", error);
+    return [];
+  }
+}
+
 export async function getCourses() {
   try {
     const courses = await prisma.course.findMany({
