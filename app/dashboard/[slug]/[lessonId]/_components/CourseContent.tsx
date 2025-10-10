@@ -76,36 +76,45 @@ export function CourseContent({ data }: iAppProps) {
     });
   }
   return (
-    <div className="flex flex-col h-full bg-background pl-6">
+    <div className="flex flex-col h-full bg-background p-3 sm:p-4 lg:pl-6 lg:p-0">
       <VideoPlayer
         thumbnailKey={data.thumbnailKey ?? ""}
         videoKey={data.videoKey ?? ""}
       />
 
-      <div className="py-4 border-b">
+      <div className="py-3 sm:py-4 border-b">
         {data.lessonProgress.length > 0 ? (
           <Button
             variant="outline"
-            className="bg-green-500/10 text-green-500 hover:text-green-600"
+            className="bg-green-500/10 text-green-500 hover:text-green-600 w-full sm:w-auto text-sm"
+            size="sm"
           >
             <CheckCircle className="size-4 mr-2 text-green-500" />
             Completed
           </Button>
         ) : (
-          <Button variant="outline" onClick={onSubmit} disabled={pending}>
+          <Button 
+            variant="outline" 
+            onClick={onSubmit} 
+            disabled={pending}
+            className="w-full sm:w-auto text-sm"
+            size="sm"
+          >
             <CheckCircle className="size-4 mr-2 text-green-500" />
             Mark as Complete
           </Button>
         )}
       </div>
 
-      <div className="space-y-3 pt-3">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+      <div className="space-y-2 sm:space-y-3 pt-3 overflow-y-auto">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
           {data.title}
         </h1>
 
         {data.description && (
-          <RenderDescription json={JSON.parse(data.description)} />
+          <div className="prose prose-sm sm:prose max-w-none">
+            <RenderDescription json={JSON.parse(data.description)} />
+          </div>
         )}
       </div>
     </div>

@@ -33,7 +33,7 @@ interface SecurePDFViewerProps {
 export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pdfDocument, setPdfDocument] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -268,18 +268,20 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
       
       <CardContent>
         {/* Controls */}
-        <div className="flex items-center justify-between mb-4 p-3 bg-muted/50 rounded-lg">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-2 sm:p-3 bg-muted/50 rounded-lg">
+          <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
             <Button
               variant="outline"
               size="sm"
               onClick={goToPreviousPage}
               disabled={currentPage <= 1}
+              className="h-8"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline ml-1">Prev</span>
             </Button>
             
-            <span className="text-sm font-medium px-2">
+            <span className="text-xs sm:text-sm font-medium px-1 sm:px-2">
               {currentPage} / {totalPages}
             </span>
             
@@ -288,26 +290,28 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
               size="sm"
               onClick={goToNextPage}
               disabled={currentPage >= totalPages}
+              className="h-8"
             >
-              <ChevronRight className="h-4 w-4" />
+              <span className="hidden sm:inline mr-1">Next</span>
+              <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={zoomOut}>
-              <ZoomOut className="h-4 w-4" />
+          <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
+            <Button variant="outline" size="sm" onClick={zoomOut} className="h-8">
+              <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
             
-            <span className="text-sm font-medium px-2">
+            <span className="text-xs sm:text-sm font-medium px-1 sm:px-2 min-w-[50px] text-center">
               {Math.round(scale * 100)}%
             </span>
             
-            <Button variant="outline" size="sm" onClick={zoomIn}>
-              <ZoomIn className="h-4 w-4" />
+            <Button variant="outline" size="sm" onClick={zoomIn} className="h-8">
+              <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
             
-            <Button variant="outline" size="sm" onClick={rotate}>
-              <RotateCw className="h-4 w-4" />
+            <Button variant="outline" size="sm" onClick={rotate} className="h-8">
+              <RotateCw className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>
@@ -330,12 +334,12 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         </div>
 
         {/* Security Warning */}
-        <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-          <div className="flex items-center gap-2 text-sm text-amber-800 dark:text-amber-200">
-            <AlertTriangle className="h-4 w-4" />
+        <div className="mt-3 md:mt-4 p-2 md:p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
             <span className="font-medium">Protected Content</span>
           </div>
-          <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+          <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300 mt-1">
             This PDF is protected. Right-click, printing, and downloading are disabled.
           </p>
         </div>

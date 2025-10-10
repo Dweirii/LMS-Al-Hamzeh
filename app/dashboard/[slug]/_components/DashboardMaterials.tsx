@@ -180,14 +180,14 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
       <div className="fixed inset-0 z-50 bg-background">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-background">
-            <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5" />
-              <div>
-                <h2 className="font-semibold">{viewingMaterial.title}</h2>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center justify-between p-3 md:p-4 border-b bg-background">
+            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+              <FileText className="h-4 w-4 md:h-5 md:w-5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <h2 className="font-semibold text-sm md:text-base truncate">{viewingMaterial.title}</h2>
+                <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
                   <AlertTriangle className="h-3 w-3" />
-                  <span>Protected Content</span>
+                  <span className="text-xs">Protected Content</span>
                 </div>
               </div>
             </div>
@@ -195,10 +195,10 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
               variant="ghost"
               size="sm"
               onClick={handleCloseViewer}
-              className="gap-2"
+              className="gap-1 md:gap-2 shrink-0"
             >
               <X className="h-4 w-4" />
-              Close
+              <span className="hidden sm:inline">Close</span>
             </Button>
           </div>
 
@@ -262,40 +262,41 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {materials.map((material) => (
             <Card key={material.id} className="rounded-xl border shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <FileText className="h-4 w-4 text-primary" />
+              <CardHeader className="pb-3 p-3 md:p-4">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+                  <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 w-full sm:w-auto">
+                    <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg shrink-0">
+                      <FileText className="h-3 w-3 md:h-4 md:w-4 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold truncate">{material.title}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Calendar className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">
+                      <h3 className="font-semibold text-sm md:text-base truncate">{material.title}</h3>
+                      <div className="flex items-center gap-1 md:gap-2 mt-1">
+                        <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
+                        <span className="text-xs text-muted-foreground truncate">
                           {new Date(material.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs shrink-0 self-start sm:self-auto">
                     <Shield className="h-3 w-3" />
-                    Protected
+                    <span className="hidden sm:inline">Protected</span>
                   </Badge>
                 </div>
               </CardHeader>
               
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 p-3 md:p-4 md:pt-0">
                 <Button 
                   onClick={() => handleViewMaterial(material)}
-                  className="w-full gap-2"
+                  className="w-full gap-1 md:gap-2 text-sm"
                   size="sm"
                 >
-                  <Maximize2 className="h-4 w-4" />
-                  View Full Screen
+                  <Maximize2 className="h-3 w-3 md:h-4 md:w-4" />
+                  <span className="sm:hidden">View</span>
+                  <span className="hidden sm:inline">View Full Screen</span>
                 </Button>
               </CardContent>
             </Card>
@@ -304,13 +305,13 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
         
         <Separator />
         
-        <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800">
-          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
-          <div>
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+        <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800">
+          <AlertTriangle className="h-4 w-4 md:h-5 md:w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs md:text-sm font-medium text-amber-800 dark:text-amber-200">
               Protected Content
             </p>
-            <p className="text-sm text-amber-700 dark:text-amber-300">
+            <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300">
               These materials are protected and cannot be downloaded or shared.
             </p>
           </div>

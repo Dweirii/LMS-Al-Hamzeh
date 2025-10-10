@@ -7,7 +7,6 @@ import {
   ArrowLeft, 
   Calendar, 
   BookOpen, 
-  Eye, 
   FileText
 } from "lucide-react";
 import Link from "next/link";
