@@ -1,4 +1,4 @@
-# 🎓 Al-Hamzeh LMS Platform
+# Al-Hamzeh LMS Platform
 
 <div align="center">
 
@@ -22,23 +22,23 @@
 
 Al-Hamzeh LMS is a **production-ready, enterprise-grade Learning Management System** designed to deliver exceptional online learning experiences with military-grade content protection. Built with Next.js 15 and React 19, it offers a seamless, high-performance interface for students, instructors, and administrators.
 
-### 🌟 What Makes Al-Hamzeh LMS Special?
+### What Makes Al-Hamzeh LMS Special?
 
-- 🚀 **Blazing Fast Performance** - Powered by Next.js 15 App Router with React Server Components & Turbopack
-- 🎥 **Optimized Video Streaming** - HTTP 206 Range Requests with instant metadata loading and smooth playback
-- 🔒 **Military-Grade Content Protection** - Advanced DevTools detection, DRM-like features, and legal warnings
-- 📱 **Mobile First & Responsive** - Flawless experience across all devices with touch-optimized UI
-- 🎨 **Modern Beautiful UI** - Sleek design with Tailwind CSS v4 and shadcn/ui components
-- 📊 **Real-Time Progress Tracking** - Comprehensive analytics and student progress monitoring
-- 💳 **Secure Payment Integration** - Stripe-powered payments with webhook automation
-- 🔐 **Zero-Trust Security** - Protected PDFs, encrypted storage, role-based access control
-- ⚡ **Production Optimized** - Rate limiting, caching, and security hardening with Arcjet
+- **Blazing Fast Performance** - Powered by Next.js 15 App Router with React Server Components & Turbopack
+- **Optimized Video Streaming** - HTTP 206 Range Requests with instant metadata loading and smooth playback
+- **Military-Grade Content Protection** - Advanced DevTools detection, DRM-like features, and legal warnings
+- **Mobile First & Responsive** - Flawless experience across all devices with touch-optimized UI
+- **Modern Beautiful UI** - Sleek design with Tailwind CSS v4 and shadcn/ui components
+- **Real-Time Progress Tracking** - Comprehensive analytics and student progress monitoring
+- **Secure Payment Integration** - Stripe-powered payments with webhook automation
+- **Zero-Trust Security** - Protected PDFs, encrypted storage, role-based access control
+- **Production Optimized** - Rate limiting, caching, and security hardening with Arcjet
 
 ---
 
-## 🎯 Features
+## Features
 
-### 🎥 Advanced Video Player (Production-Ready)
+### Advanced Video Player (Production-Ready)
 
 Our custom-built video player is optimized for speed, security, and user experience:
 
@@ -49,7 +49,7 @@ Our custom-built video player is optimized for speed, security, and user experie
 - **Smooth Playback** - Minimal buffering with adaptive streaming
 - **Mobile Optimized** - `playsInline` for seamless iOS/Android experience
 
-#### 🔒 Content Protection Features
+#### Content Protection Features
 - **Download Prevention** - Hidden download button with `controlsList="nodownload"`
 - **Right-Click Disabled** - Context menu completely blocked on videos
 - **DevTools Detection** - Real-time monitoring and warnings when users try to inspect
@@ -58,48 +58,48 @@ Our custom-built video player is optimized for speed, security, and user experie
 - **Smart Cooldown System** - Non-intrusive 10-second cooldown between warnings
 - **Presigned URLs** - Temporary access with auto-expiring links from Tigris.dev S3
 
-#### 📺 UX Features
+#### UX Features
 - **Picture-in-Picture Support** - Enhanced multitasking capability
 - **Responsive Design** - Works perfectly on any screen size
 - **Custom Poster Images** - Beautiful thumbnails before playback
 - **Playback Speed Control** - Allow users to speed up/slow down content
 - **Clean Interface** - Professional video player with shadow effects
 
-### 👨‍🎓 For Students
+### For Students
 
-- **📚 Course Catalog** - Browse courses with rich previews, ratings, and detailed descriptions
-- **🎥 HD Video Lessons** - Smooth, protected video playback with instant load and no buffering
-- **📄 Secure PDF Materials** - Custom PDF.js viewer with zero-download protection
-- **📈 Progress Dashboard** - Visual progress tracking with percentage indicators and charts
-- **📱 Mobile Learning** - Native app-like experience on all mobile devices
-- **🏆 Completion Certificates** - Earn certificates with confetti celebrations
-- **💰 One-Click Checkout** - Stripe-powered secure payment with saved cards
-- **🔔 Real-Time Notifications** - Toast notifications for important updates
-- **🎯 Personalized Feed** - AI-powered course recommendations (coming soon)
+- **Course Catalog** - Browse courses with rich previews, ratings, and detailed descriptions
+- **HD Video Lessons** - Smooth, protected video playback with instant load and no buffering
+- **Secure PDF Materials** - Custom PDF.js viewer with zero-download protection
+- **Progress Dashboard** - Visual progress tracking with percentage indicators and charts
+- **Mobile Learning** - Native app-like experience on all mobile devices
+- **Completion Certificates** - Earn certificates with confetti celebrations
+- **One-Click Checkout** - Stripe-powered secure payment with saved cards
+- **Real-Time Notifications** - Toast notifications for important updates
+- **Personalized Feed** - AI-powered course recommendations (coming soon)
 
-### 👨‍🏫 For Instructors/Admins
+### For Instructors/Admins
 
 #### Course Management
-- **📝 Full CRUD Operations** - Create, edit, reorder, and delete courses/chapters/lessons
-- **🖼️ Media Upload** - Drag-and-drop video and image uploads to Tigris S3
-- **📊 Rich Analytics Dashboard** - Track enrollments, completions, and revenue
-- **📁 Material Library** - Organize PDFs, videos, and documents per course
-- **👥 Student Management** - View enrollments, track progress, manage access
-- **🎨 Rich Text Editor** - TipTap-powered WYSIWYG editor with text alignment
-- **🔄 Drag-and-Drop Reordering** - @dnd-kit integration for easy content organization
-- **👁️ Visibility Controls** - Show/hide materials and lessons individually
-- **💵 Revenue Analytics** - Real-time sales tracking and financial reports
+- **Full CRUD Operations** - Create, edit, reorder, and delete courses/chapters/lessons
+- **Media Upload** - Drag-and-drop video and image uploads to Tigris S3
+- **Rich Analytics Dashboard** - Track enrollments, completions, and revenue
+- **Material Library** - Organize PDFs, videos, and documents per course
+- **Student Management** - View enrollments, track progress, manage access
+- **Rich Text Editor** - TipTap-powered WYSIWYG editor with text alignment
+- **Drag-and-Drop Reordering** - @dnd-kit integration for easy content organization
+- **Visibility Controls** - Show/hide materials and lessons individually
+- **Revenue Analytics** - Real-time sales tracking and financial reports
 
 #### Admin Features
-- **🔐 Role-Based Access Control** - Separate admin and student interfaces with permissions
-- **🎓 University Management** - Multi-tenant support for educational institutions
-- **👤 User Management** - Comprehensive user administration and access control
-- **📊 Dashboard Statistics** - Real-time stats on courses, students, and revenue
-- **🔍 Advanced Filtering** - Search and filter courses, students, and materials
-- **📈 Enrollment Statistics** - Track enrollments over time with interactive charts
-- **⚙️ System Configuration** - Platform settings and customization options
+- **Role-Based Access Control** - Separate admin and student interfaces with permissions
+- **University Management** - Multi-tenant support for educational institutions
+- **User Management** - Comprehensive user administration and access control
+- **Dashboard Statistics** - Real-time stats on courses, students, and revenue
+- **Advanced Filtering** - Search and filter courses, students, and materials
+- **Enrollment Statistics** - Track enrollments over time with interactive charts
+- **System Configuration** - Platform settings and customization options
 
-### 🔒 Enterprise Security Features
+### Enterprise Security Features
 
 #### Video Protection
 - **DevTools Detection** - Monitors window size changes to detect inspector opening
@@ -130,7 +130,7 @@ Our custom-built video player is optimized for speed, security, and user experie
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework**: [Next.js 15.3](https://nextjs.org/) - React framework with App Router & Turbopack
@@ -167,7 +167,7 @@ Our custom-built video player is optimized for speed, security, and user experie
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -296,7 +296,7 @@ Your LMS is now running locally. You can:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 lms-al-hamzeh/
@@ -538,11 +538,11 @@ model Material {
 - ✅ UUID primary keys for security
 - ✅ Relation mode for MySQL/PostgreSQL compatibility
 
-[📖 View Full Schema](prisma/schema.prisma)
+[View Full Schema](prisma/schema.prisma)
 
 ---
 
-## 🎨 Key Features Breakdown
+## Key Features Breakdown
 
 ### 🎥 Production-Ready Video Player
 
@@ -567,7 +567,7 @@ Our video player is built for **speed, security, and user experience**:
 - **Smart warning system** with 10-second cooldown to prevent spam
 - **Legal toast notifications** warning about copyright violations
 
-### 🔐 Secure PDF Viewer
+### Secure PDF Viewer
 
 Enterprise-grade document security with our custom PDF.js implementation:
 
@@ -587,7 +587,7 @@ Enterprise-grade document security with our custom PDF.js implementation:
 - **Sandboxed iframe** - Additional security layer
 - **No DevTools access** - Video-like protection warnings
 
-### 📱 Mobile-First Responsive Design
+### Mobile-First Responsive Design
 
 Perfect experience across all devices:
 
@@ -606,7 +606,7 @@ Perfect experience across all devices:
 - Drawer menus on small screens
 - Collapsible sidebars on tablets
 
-### 📊 Progress Tracking & Analytics
+### Progress Tracking & Analytics
 
 Comprehensive learning analytics for students and admins:
 
@@ -624,7 +624,7 @@ Comprehensive learning analytics for students and admins:
 - Student engagement metrics
 - Time-series data with Recharts
 
-### 💳 Stripe Payment Integration
+### Stripe Payment Integration
 
 Secure, PCI-compliant payment processing:
 
@@ -655,24 +655,24 @@ stripe.checkout.sessions.create({
 
 ---
 
-## 🔧 Development
+## Development
 
 ### Available Scripts
 
 ```bash
-# 🚀 Development
+# Development
 pnpm dev              # Start dev server with Turbopack (ultra-fast)
 pnpm build            # Build for production
 pnpm start            # Start production server
 pnpm lint             # Run ESLint for code quality
 
-# 💾 Database
+# Database
 pnpm prisma:generate  # Generate Prisma Client types
 pnpm prisma:push      # Push schema to database (dev)
 pnpm prisma:studio    # Open Prisma Studio (database GUI)
 pnpm prisma:migrate   # Create and run migrations (prod)
 
-# 🧹 Maintenance
+# Maintenance
 pnpm tsx scripts/cleanup-enrollments.ts  # Clean orphaned enrollments
 pnpm tsx scripts/cleanup-orphans.ts      # Clean orphaned records
 ```
@@ -706,7 +706,7 @@ pnpm prisma migrate deploy
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Recommended: Vercel (Zero-Config)
 
@@ -825,35 +825,8 @@ CMD ["npm", "start"]
 
 **Best for:** Complete control, on-premise deployments
 
----
 
-## 📚 Documentation
-
-### 📖 User Guides
-
-- [**Student Guide**](docs/student-guide.md) - How to enroll, watch lessons, track progress
-- [**Instructor Guide**](docs/instructor-guide.md) - Creating courses, uploading materials
-- [**Admin Guide**](docs/admin-guide.md) - Platform administration, user management
-
-### 💻 Developer Guides
-
-- [**API Reference**](docs/api-reference.md) - Complete API documentation
-- [**Component Library**](docs/components.md) - UI component usage and props
-- [**Database Schema**](docs/database.md) - Models, relationships, queries
-- [**Security Best Practices**](docs/security.md) - Security guidelines and checklist
-- [**Deployment Guide**](docs/deployment.md) - Production deployment steps
-- [**Environment Variables**](docs/environment.md) - Complete env var reference
-
-### 🎯 Feature Guides
-
-- [**Video Player Setup**](docs/video-player.md) - Configure and optimize video streaming
-- [**PDF Protection**](docs/pdf-protection.md) - Implement secure document viewing
-- [**Stripe Integration**](docs/stripe-integration.md) - Payment setup and webhooks
-- [**S3 File Upload**](docs/file-upload.md) - Tigris S3 upload configuration
-
----
-
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions from the community! Here's how to get involved:
 
@@ -913,18 +886,18 @@ We welcome contributions from the community! Here's how to get involved:
 
 ### What to Contribute
 
-- 🐛 Bug fixes
-- ✨ New features
-- 📝 Documentation improvements
-- 🎨 UI/UX enhancements
-- ♿ Accessibility improvements
-- 🌐 Translations/i18n
-- ⚡ Performance optimizations
-- 🧪 Tests
+- Bug fixes
+- New features
+- Documentation improvements
+- UI/UX enhancements
+- Accessibility improvements
+- Translations/i18n
+- Performance optimizations
+- Tests
 
 ---
 
-## 🐛 Bug Reports & Feature Requests
+## Bug Reports & Feature Requests
 
 ### Reporting Bugs
 
@@ -950,14 +923,14 @@ Have an idea? We'd love to hear it:
 **[Request Feature](https://github.com/Dweirii/LMS-Al-Hamzeh/issues/new?labels=enhancement)**
 
 Include:
-- 🎯 What problem does it solve?
-- 💡 Describe your proposed solution
-- 🔄 Alternative solutions considered
-- 📸 Mockups or examples (optional)
+- What problem does it solve?
+- Describe your proposed solution
+- Alternative solutions considered
+- Mockups or examples (optional)
 
 ---
 
-## 📊 Project Stats
+## Project Stats
 
 <div align="center">
 
@@ -974,7 +947,7 @@ Include:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -1004,7 +977,7 @@ SOFTWARE.
 
 ---
 
-## 👨‍💻 Author
+## 👨Author
 
 <div align="center">
 
@@ -1021,7 +994,7 @@ Full-Stack Developer | LMS Architect | Open Source Enthusiast
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Special thanks to the amazing open-source community and these incredible projects:
 
@@ -1059,22 +1032,21 @@ Special thanks to the amazing open-source community and these incredible project
 
 ---
 
-## 🌟 Show Your Support
+## Show Your Support
 
 If you find this project helpful, please consider:
 
-- ⭐ **Star this repository** - It helps others discover the project
-- 🐦 **Share on Twitter** - Spread the word
-- 📝 **Write a blog post** - Share your experience
-- 💬 **Join discussions** - Help others in Issues/Discussions
-- 🤝 **Contribute** - Submit PRs and improvements
-- ☕ **Buy me a coffee** - Support development (link in profile)
+- **Star this repository** - It helps others discover the project
+- **Share on Twitter** - Spread the word
+- **Write a blog post** - Share your experience
+- **Join discussions** - Help others in Issues/Discussions
+- **Contribute** - Submit PRs and improvements
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
-### 🚀 Coming Soon (Q1 2025)
+### Coming Soon (Q1 2025)
 
 - [ ] **AI-Powered Course Recommendations** - Personalized learning paths
 - [ ] **Live Class Integration** - Zoom/Meet integration for live sessions
@@ -1100,17 +1072,17 @@ If you find this project helpful, please consider:
 
 ---
 
-## 📞 Support
+## Support
 
 Need help? We're here for you:
 
-### 💬 Community Support
+### Community Support
 
 - **GitHub Discussions** - Ask questions, share ideas
 - **GitHub Issues** - Report bugs, request features
 - **Discord Community** - Real-time chat (coming soon)
 
-### 📧 Direct Support
+### Direct Support
 
 For urgent issues or enterprise inquiries:
 - **Email**: [support@alhamzeh-lms.com](mailto:support@alhamzeh-lms.com)
@@ -1126,16 +1098,16 @@ For urgent issues or enterprise inquiries:
 
 <div align="center">
 
-## 🎉 Thank You for Using Al-Hamzeh LMS!
+## Thank You for Using Al-Hamzeh LMS!
 
 ### ⭐ Star this repository if you find it helpful!
 
 **Built with ❤️ by [Zaid Dweiri](https://github.com/Dweirii)**
 
-[🐛 Report Bug](https://github.com/Dweirii/LMS-Al-Hamzeh/issues) • 
-[✨ Request Feature](https://github.com/Dweirii/LMS-Al-Hamzeh/issues) • 
-[📖 Documentation](https://github.com/Dweirii/LMS-Al-Hamzeh/wiki) • 
-[💬 Discussions](https://github.com/Dweirii/LMS-Al-Hamzeh/discussions)
+[Report Bug](https://github.com/Dweirii/LMS-Al-Hamzeh/issues) • 
+[Request Feature](https://github.com/Dweirii/LMS-Al-Hamzeh/issues) • 
+[Documentation](https://github.com/Dweirii/LMS-Al-Hamzeh/wiki) • 
+[Discussions](https://github.com/Dweirii/LMS-Al-Hamzeh/discussions)
 
 ---
 
