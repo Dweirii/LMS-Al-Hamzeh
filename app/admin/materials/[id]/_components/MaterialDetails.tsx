@@ -14,7 +14,6 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SecurePDFViewer } from "@/components/ui/SecurePDFViewer";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Material {
   id: string;
   title: string;
