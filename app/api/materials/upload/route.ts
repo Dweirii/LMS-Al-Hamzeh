@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { S3 } from "@/lib/S3Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { requireApiAdmin } from "@/lib/api-auth";
+import { env } from "@/lib/env";
 
 export async function POST(request: NextRequest) {
+  const auth = await requireApiAdmin();
+  if (auth.error) return auth.error;
+
   try {
     const formData = await request.formData();
     const title = formData.get("title") as string;
@@ -34,7 +39,7 @@ export async function POST(request: NextRequest) {
     const fileKey = `materials/${courseId}/${Date.now()}-${file.name}`;
     
     await S3.send(new PutObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES!,
+      Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
       Key: fileKey,
       Body: buffer,
       ContentType: file.type,

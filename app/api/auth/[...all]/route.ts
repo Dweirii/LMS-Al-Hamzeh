@@ -93,11 +93,15 @@ export const { GET } = authHandlers;
 export const POST = async (req: NextRequest) => {
   const decision = await protect(req);
 
-  console.log("Arcjet Decision:", decision);
-
   if (decision.isDenied()) {
+    // Every branch answers with a JSON message. An empty-bodied response leaves
+    // the sign-in form showing a generic failure with no way to tell a rate
+    // limit from a blocked email.
     if (decision.reason.isRateLimit()) {
-      return new Response(null, { status: 429 });
+      return Response.json(
+        { message: "Too many attempts. Please wait a few minutes and try again." },
+        { status: 429 }
+      );
     } else if (decision.reason.isEmail()) {
       let message: string;
 
@@ -116,7 +120,10 @@ export const POST = async (req: NextRequest) => {
 
       return Response.json({ message }, { status: 400 });
     } else {
-      return new Response(null, { status: 403 });
+      return Response.json(
+        { message: "This request was blocked. Please try again from a standard browser." },
+        { status: 403 }
+      );
     }
   }
 

@@ -20,12 +20,25 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       async sendVerificationOTP({ email, otp }) {
-        await resend.emails.send({
-          from: "GATA3A  <onboarding@resend.dev>",
-          to: [email],
-          subject: "GATA3A  - Verify your email",
-          html: `<p>Your OTP is <strong>${otp}</strong></p>`,
-        });
+        // Outside production the OTP is printed to the server console, so the app
+        // can be signed into locally without a verified Resend sending domain.
+        if (process.env.NODE_ENV !== "production") {
+          console.log(`\n  [dev] Sign-in OTP for ${email}: ${otp}\n`);
+        }
+
+        try {
+          await resend.emails.send({
+            from: env.RESEND_FROM_EMAIL,
+            to: [email],
+            subject: "GATA3A - Verify your email",
+            html: `<p>Your OTP is <strong>${otp}</strong></p>`,
+          });
+        } catch (error) {
+          // A placeholder or unverified Resend key must not block local sign-in,
+          // but in production a delivery failure is a real error.
+          if (process.env.NODE_ENV === "production") throw error;
+          console.warn("  [dev] Resend delivery failed; use the OTP logged above.");
+        }
       },
     }),
     admin(),

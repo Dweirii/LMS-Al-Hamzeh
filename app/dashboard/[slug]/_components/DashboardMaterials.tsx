@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,11 +37,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
   const [loadingPdf, setLoadingPdf] = useState(false);
   const [pdfError, setPdfError] = useState(false);
 
-  useEffect(() => {
-    fetchMaterials();
-  }, [courseId]);
-
-  const fetchMaterials = async () => {
+  const fetchMaterials = useCallback(async () => {
     try {
       const response = await fetch(`/api/courses/${courseId}/materials`);
       if (response.ok) {
@@ -53,7 +49,11 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [courseId]);
+
+  useEffect(() => {
+    fetchMaterials();
+  }, [fetchMaterials]);
 
   const handleViewMaterial = async (material: Material) => {
     setViewingMaterial(material);
@@ -78,14 +78,14 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
     }
   };
 
-  const handleCloseViewer = () => {
+  const handleCloseViewer = useCallback(() => {
     setViewingMaterial(null);
     setPdfUrl(null);
     setLoadingPdf(false);
     setPdfError(false);
-  };
+  }, []);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (
       (e.ctrlKey || e.metaKey) && 
       (e.key === 's' || e.key === 'p' || e.key === 'a' || e.key === 'c')
@@ -106,12 +106,12 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
     if (e.key === 'Escape') {
       handleCloseViewer();
     }
-  };
+  }, [handleCloseViewer]);
 
-  const handleContextMenu = (e: MouseEvent) => {
+  const handleContextMenu = useCallback((e: MouseEvent) => {
     e.preventDefault();
     toast.error("Right-click is disabled");
-  };
+  }, []);
 
   useEffect(() => {
     if (viewingMaterial) {
@@ -123,7 +123,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
         document.removeEventListener('contextmenu', handleContextMenu);
       };
     }
-  }, [viewingMaterial]);
+  }, [viewingMaterial, handleKeyDown, handleContextMenu]);
 
   if (loading) {
     return (
@@ -264,9 +264,9 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {materials.map((material) => (
-            <Card key={material.id} className="rounded-xl border shadow-sm hover:shadow-md transition-shadow">
+            <Card key={material.id} className="rounded-xl border shadow-sm hover:shadow-md transition-shadow min-w-0">
               <CardHeader className="pb-3 p-3 md:p-4">
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-2 min-w-0">
                   <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 w-full sm:w-auto">
                     <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg shrink-0">
                       <FileText className="h-3 w-3 md:h-4 md:w-4 text-primary" />
