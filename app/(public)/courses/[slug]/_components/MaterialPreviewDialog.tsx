@@ -21,11 +21,11 @@ interface Material {
   createdAt: string;
 }
 
-interface SecurePDFViewerProps {
+interface MaterialPreviewDialogProps {
   material: Material;
 }
 
-export function SecurePDFViewer({ material }: SecurePDFViewerProps) {
+export function MaterialPreviewDialog({ material }: MaterialPreviewDialogProps) {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingPdf, setLoadingPdf] = useState(false);
