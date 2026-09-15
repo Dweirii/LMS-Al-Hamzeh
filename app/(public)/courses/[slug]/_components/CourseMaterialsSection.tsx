@@ -8,7 +8,7 @@ import {
   FileText
 } from "lucide-react";
 import { getMaterialsByCourseId } from "@/app/data/admin/admin-get-materials";
-import { SecurePDFViewer } from "./SecurePDFViewer";
+import { MaterialPreviewDialog } from "./MaterialPreviewDialog";
 import Link from "next/link";
 
 interface CourseMaterialsSectionProps {
@@ -111,7 +111,7 @@ export async function CourseMaterialsSection({
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {materials.map((material) => (
-            <SecurePDFViewer
+            <MaterialPreviewDialog
               key={material.id}
               material={{
                 ...material,
