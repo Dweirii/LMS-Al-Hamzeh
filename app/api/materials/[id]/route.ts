@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { S3 } from "@/lib/S3Client";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { requireApiAdmin, requireCourseAccess } from "@/lib/api-auth";
+import { env } from "@/lib/env";
 
 interface RouteParams {
   params: Promise<{
@@ -11,6 +13,19 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
+
+  const material = await prisma.material.findUnique({
+    where: { id },
+    select: { courseId: true },
+  });
+
+  if (!material) {
+    return NextResponse.json({ error: "Material not found" }, { status: 404 });
+  }
+
+  const auth = await requireCourseAccess(material.courseId);
+  if (auth.error) return auth.error;
+
   try {
     const material = await prisma.material.findUnique({
       where: { id },
@@ -42,38 +57,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  const { id } = await params;
-  try {
-    const body = await request.json();
-    const { isVisible } = body;
-
-    const material = await prisma.material.update({
-      where: { id },
-      data: { isVisible },
-      include: {
-        course: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(material);
-  } catch (error) {
-    console.error("Material update error:", error);
-    return NextResponse.json(
-      { error: "Failed to update material" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
+
+  const auth = await requireApiAdmin();
+  if (auth.error) return auth.error;
+
   try {
     const material = await prisma.material.findUnique({
       where: { id },
@@ -89,7 +78,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     // Delete file from S3
     try {
       await S3.send(new DeleteObjectCommand({
-        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES!,
+        Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
         Key: material.fileKey,
       }));
     } catch (s3Error) {

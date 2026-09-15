@@ -1,6 +1,11 @@
+import "server-only";
+
 import { prisma } from "@/lib/db";
+import { requireAdmin } from "./require-admin";
 
 export async function getMaterials() {
+  await requireAdmin();
+
   try {
     const materials = await prisma.material.findMany({
       include: {
@@ -25,6 +30,8 @@ export async function getMaterials() {
 }
 
 export async function getMaterialById(id: string) {
+  await requireAdmin();
+
   try {
     const material = await prisma.material.findUnique({
       where: { id },
@@ -47,6 +54,8 @@ export async function getMaterialById(id: string) {
 }
 
 export async function getMaterialsByCourseId(courseId: string) {
+  await requireAdmin();
+
   try {
     const materials = await prisma.material.findMany({
       where: {
@@ -75,6 +84,8 @@ export async function getMaterialsByCourseId(courseId: string) {
 }
 
 export async function getCourses() {
+  await requireAdmin();
+
   try {
     const courses = await prisma.course.findMany({
       select: {
