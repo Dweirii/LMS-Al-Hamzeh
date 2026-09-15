@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { requireApiAdmin } from "@/lib/api-auth";
 
 interface RouteParams {
   params: Promise<{
@@ -9,7 +10,10 @@ interface RouteParams {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
-  
+
+  const auth = await requireApiAdmin();
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const { isVisible } = body;

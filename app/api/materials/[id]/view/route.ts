@@ -3,6 +3,8 @@ import { S3 } from "@/lib/S3Client";
 import { prisma } from "@/lib/db";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { requireCourseAccess } from "@/lib/api-auth";
+import { env } from "@/lib/env";
 
 interface RouteParams {
   params: Promise<{
@@ -12,17 +14,26 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
-  try {
-    const material = await prisma.material.findUnique({
-      where: { id },
-    });
 
-    if (!material) {
-      return NextResponse.json(
-        { error: "Material not found" },
-        { status: 404 }
-      );
-    }
+  const material = await prisma.material.findUnique({
+    where: { id },
+  });
+
+  if (!material) {
+    return NextResponse.json({ error: "Material not found" }, { status: 404 });
+  }
+
+  // This route hands out a signed, time-limited link to paid course content, so
+  // it must be gated on enrollment. Without this check any visitor holding a
+  // material id could download the file.
+  const auth = await requireCourseAccess(material.courseId);
+  if (auth.error) return auth.error;
+
+  if (!material.isVisible && auth.session.user.role !== "admin") {
+    return NextResponse.json({ error: "Material not found" }, { status: 404 });
+  }
+
+  try {
 
     // Seeded and imported materials can hold an absolute URL rather than an S3
     // object key; serve those directly instead of presigning a key that does not
@@ -33,7 +44,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Generate presigned URL for viewing
     const command = new GetObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES!,
+      Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
       Key: material.fileKey,
     });
     const viewUrl = await getSignedUrl(S3, command, { expiresIn: 3600 });
