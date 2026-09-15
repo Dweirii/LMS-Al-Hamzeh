@@ -106,7 +106,7 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
 
               onChange?.(key);
 
-              toast.success("File uploaded succesfully");
+              toast.success("File uploaded successfully");
 
               resolve();
             } else {

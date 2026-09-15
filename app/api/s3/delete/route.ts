@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/app/data/admin/require-admin";
+import { requireApiAdmin } from "@/lib/api-auth";
 import arcjet, { fixedWindow } from "@/lib/arcjet";
 
 import { env } from "@/lib/env";
@@ -15,14 +15,19 @@ const aj = arcjet.withRule(
 );
 
 export async function DELETE(request: Request) {
-  const session = await requireAdmin();
+  const auth = await requireApiAdmin();
+  if (auth.error) return auth.error;
+
   try {
     const decision = await aj.protect(request, {
-      fingerprint: session?.user.id as string,
+      fingerprint: auth.session.user.id,
     });
 
     if (decision.isDenied()) {
-      return NextResponse.json({ error: "dudde not good" }, { status: 429 });
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a moment and try again." },
+        { status: 429 }
+      );
     }
     const body = await request.json();
 
@@ -43,12 +48,13 @@ export async function DELETE(request: Request) {
     await S3.send(command);
 
     return NextResponse.json(
-      { message: "File deleted succesfully" },
+      { message: "File deleted successfully" },
       { status: 200 }
     );
-  } catch {
+  } catch (error) {
+    console.error("S3 delete error:", error);
     return NextResponse.json(
-      { error: "Missing or invalid object key" },
+      { error: "Failed to delete file" },
       { status: 500 }
     );
   }
