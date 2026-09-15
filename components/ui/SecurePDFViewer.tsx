@@ -16,12 +16,20 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-// Import PDF.js
-import * as pdfjsLib from 'pdfjs-dist';
+// PDF.js touches browser-only globals (DOMMatrix) while its module initialises, so
+// a static import crashes this component during server-side rendering even though
+// it is a client component. Load it lazily in the browser instead, once.
+type PdfJs = typeof import("pdfjs-dist");
+let pdfjsPromise: Promise<PdfJs> | null = null;
 
-// Set up PDF.js worker
-if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+function loadPdfJs(): Promise<PdfJs> {
+  if (!pdfjsPromise) {
+    pdfjsPromise = import("pdfjs-dist").then((lib) => {
+      lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
+      return lib;
+    });
+  }
+  return pdfjsPromise;
 }
 
 interface SecurePDFViewerProps {
@@ -55,7 +63,8 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         console.log('Loading PDF from URL:', pdfUrl);
         
         // Create a simple loading task with minimal configuration
-        const loadingTask = pdfjsLib.getDocument({
+        const pdfjs = await loadPdfJs();
+        const loadingTask = pdfjs.getDocument({
           url: pdfUrl,
           withCredentials: false,
         });
@@ -203,7 +212,8 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
       if (pdfUrl) {
         const loadPDF = async () => {
           try {
-            const loadingTask = pdfjsLib.getDocument({
+            const pdfjs = await loadPdfJs();
+            const loadingTask = pdfjs.getDocument({
               url: pdfUrl,
               withCredentials: false,
             });
