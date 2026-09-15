@@ -107,7 +107,7 @@ export async function CreateCourse(
 
     return {
       status: "success",
-      message: "Course created succesfully",
+      message: "Course created successfully",
     };
   } catch {
     return {
