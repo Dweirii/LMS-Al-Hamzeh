@@ -24,6 +24,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    // Seeded and imported materials can hold an absolute URL rather than an S3
+    // object key; serve those directly instead of presigning a key that does not
+    // exist in the bucket.
+    if (/^https?:\/\//i.test(material.fileKey)) {
+      return NextResponse.json({ url: material.fileKey });
+    }
+
     // Generate presigned URL for viewing
     const command = new GetObjectCommand({
       Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES!,
