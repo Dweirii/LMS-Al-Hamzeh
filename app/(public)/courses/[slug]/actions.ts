@@ -89,76 +89,77 @@ export async function enrollInCourseAction(
       });
     }
 
-    const result = await prisma.$transaction(async (tx) => {
-      const existingEnrollment = await tx.enrollment.findUnique({
-        where: {
-          userId_courseId: {
-            userId: user.id,
-            courseId: courseId,
-          },
-        },
-        select: {
-          status: true,
-          id: true,
-        },
-      });
-
-      if (existingEnrollment?.status === "Active") {
-        return {
-          status: "success",
-          message: "You are alredy enrolled in this Course",
-        };
-      }
-
-      let enrollment;
-
-      if (existingEnrollment) {
-        enrollment = await tx.enrollment.update({
-          where: {
-            id: existingEnrollment.id,
-          },
-          data: {
-            amount: course.price,
-            status: "Pending",
-            updatedAt: new Date(),
-          },
-        });
-      } else {
-        enrollment = await tx.enrollment.create({
-          data: {
-            userId: user.id,
-            courseId: course.id,
-            amount: course.price,
-            status: "Pending",
-          },
-        });
-      }
-
-      const checkoutSession = await stripe.checkout.sessions.create({
-        customer: stripeCustomerId,
-        line_items: [
-          {
-            price: course.stripePriceId,
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: `${env.BETTER_AUTH_URL}/payment/success`,
-        cancel_url: `${env.BETTER_AUTH_URL}/payment/cancel`,
-        metadata: {
+    const existingEnrollment = await prisma.enrollment.findUnique({
+      where: {
+        userId_courseId: {
           userId: user.id,
-          courseId: course.id,
-          enrollmentId: enrollment.id,
+          courseId: courseId,
         },
-      });
-
-      return {
-        enrollment: enrollment,
-        checkoutUrl: checkoutSession.url,
-      };
+      },
+      select: {
+        status: true,
+      },
     });
 
-    checkoutUrl = result.checkoutUrl as string;
+    // Returning here rather than from inside a transaction: the previous version
+    // returned a different shape on this branch and the caller then read
+    // checkoutUrl off it, passing undefined to redirect() and throwing.
+    if (existingEnrollment?.status === "Active") {
+      return {
+        status: "success",
+        message: "You are already enrolled in this course",
+      };
+    }
+
+    // upsert is atomic, so the create-or-update no longer needs a transaction.
+    const enrollment = await prisma.enrollment.upsert({
+      where: {
+        userId_courseId: {
+          userId: user.id,
+          courseId: course.id,
+        },
+      },
+      update: {
+        amount: course.price,
+        status: "Pending",
+      },
+      create: {
+        userId: user.id,
+        courseId: course.id,
+        amount: course.price,
+        status: "Pending",
+      },
+    });
+
+    // Deliberately outside any transaction. This is a network round-trip to
+    // Stripe; holding a database connection open for it risks exceeding the
+    // default 5s transaction timeout and rolling back the enrollment.
+    const checkoutSession = await stripe.checkout.sessions.create({
+      customer: stripeCustomerId,
+      line_items: [
+        {
+          price: course.stripePriceId,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${env.BETTER_AUTH_URL}/payment/success`,
+      cancel_url: `${env.BETTER_AUTH_URL}/payment/cancel`,
+      metadata: {
+        userId: user.id,
+        courseId: course.id,
+        enrollmentId: enrollment.id,
+      },
+    });
+
+    if (!checkoutSession.url) {
+      return {
+        status: "error",
+        message: "Could not start checkout. Please try again later.",
+      };
+    }
+
+    checkoutUrl = checkoutSession.url;
   } catch (error) {
     if (error instanceof Stripe.errors.StripeError) {
       return {
