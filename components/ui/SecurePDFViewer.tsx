@@ -60,8 +60,6 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         setLoading(true);
         setError(null);
         
-        console.log('Loading PDF from URL:', pdfUrl);
-        
         // Create a simple loading task with minimal configuration
         const pdfjs = await loadPdfJs();
         const loadingTask = pdfjs.getDocument({
@@ -70,7 +68,6 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         });
 
         const pdf = await loadingTask.promise;
-        console.log('PDF loaded successfully:', pdf.numPages, 'pages');
         setPdfDocument(pdf);
         setTotalPages(pdf.numPages);
         setCurrentPage(1);
@@ -117,7 +114,6 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         };
 
         await page.render(renderContext).promise;
-        console.log(`Rendered page ${currentPage}`);
       } catch (err) {
         console.error('Error rendering page:', err);
         toast.error('Failed to render page');
