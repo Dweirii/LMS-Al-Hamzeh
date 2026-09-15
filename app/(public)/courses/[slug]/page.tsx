@@ -95,7 +95,7 @@ export default async function SlugPage({ params }: { params: Params }) {
               Course Description
             </h2>
 
-            <RenderDescription json={JSON.parse(course.description)} />
+            <RenderDescription json={course.description} />
           </div>
         </div>
 
