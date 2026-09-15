@@ -194,7 +194,7 @@ export function CourseContent({ data }: iAppProps) {
 
         {data.description && (
           <div className="prose prose-sm sm:prose max-w-none">
-            <RenderDescription json={JSON.parse(data.description)} />
+            <RenderDescription json={data.description} />
           </div>
         )}
       </div>
