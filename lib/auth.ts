@@ -28,9 +28,9 @@ export const auth = betterAuth({
 
         try {
           await resend.emails.send({
-            from: "GATA3A  <onboarding@resend.dev>",
+            from: env.RESEND_FROM_EMAIL,
             to: [email],
-            subject: "GATA3A  - Verify your email",
+            subject: "GATA3A - Verify your email",
             html: `<p>Your OTP is <strong>${otp}</strong></p>`,
           });
         } catch (error) {
