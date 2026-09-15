@@ -264,9 +264,9 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {materials.map((material) => (
-            <Card key={material.id} className="rounded-xl border shadow-sm hover:shadow-md transition-shadow">
+            <Card key={material.id} className="rounded-xl border shadow-sm hover:shadow-md transition-shadow min-w-0">
               <CardHeader className="pb-3 p-3 md:p-4">
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-2 min-w-0">
                   <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 w-full sm:w-auto">
                     <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg shrink-0">
                       <FileText className="h-3 w-3 md:h-4 md:w-4 text-primary" />
