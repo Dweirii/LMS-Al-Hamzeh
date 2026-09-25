@@ -18,7 +18,7 @@ export default async function CourseSlugRoute({ params }: iAppProps) {
   }
   return (
     <div className="flex items-center justify-center h-full text-center">
-      <h2 className="text-2xl font-bold mb-2">No lessons available</h2>
+      <h2 className="mb-2 font-serif text-2xl font-medium">No lessons available</h2>
       <p className="text-muted-foreground">
         This course does not have any lessons yet!
       </p>

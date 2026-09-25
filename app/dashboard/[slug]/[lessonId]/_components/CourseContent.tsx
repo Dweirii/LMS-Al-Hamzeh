@@ -5,7 +5,7 @@ import { RenderDescription } from "@/components/rich-text-editor/RenderDescripti
 import { Button } from "@/components/ui/button";
 import { tryCatch } from "@/hooks/try-catch";
 import { useConstructUrl } from "@/hooks/use-construct-url";
-import { BookIcon, CheckCircle } from "lucide-react";
+import { BookIcon, CheckCircle, ShieldCheck } from "lucide-react";
 import { useTransition, useEffect, useRef } from "react";
 import { markLessonComplete } from "../actions";
 import { toast } from "sonner";
@@ -104,8 +104,8 @@ export function CourseContent({ data }: iAppProps) {
 
     if (!videoKey) {
       return (
-        <div className="aspect-video bg-muted rounded-lg flex flex-col items-center justify-center">
-          <BookIcon className="size-16 text-primary mx-auto mb-4" />
+        <div className="flex aspect-video flex-col items-center justify-center rounded-xl bg-muted">
+          <BookIcon className="mx-auto mb-4 size-14 text-primary" />
           <p className="text-muted-foreground">
             This lesson does not have a video yet
           </p>
@@ -114,7 +114,11 @@ export function CourseContent({ data }: iAppProps) {
     }
 
     return (
-      <div className="aspect-video bg-black rounded-lg relative overflow-hidden shadow-xl">
+      <div className="relative aspect-video overflow-hidden rounded-xl bg-black shadow-md">
+        <span className="pointer-events-none absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-xs text-white/85">
+          <ShieldCheck className="size-3.5" aria-hidden="true" />
+          Protected content
+        </span>
         <video
           className="w-full h-full object-contain"
           controls
@@ -157,43 +161,41 @@ export function CourseContent({ data }: iAppProps) {
     });
   }
   return (
-    <div className="flex flex-col h-full bg-background p-3 sm:p-4 lg:pl-6 lg:p-0">
+    <div className="flex h-full flex-col gap-5 bg-background p-4 sm:p-6 lg:px-9 lg:py-7">
       <VideoPlayer
         thumbnailKey={data.thumbnailKey ?? ""}
         videoKey={data.videoKey ?? ""}
       />
 
-      <div className="py-3 sm:py-4 border-b">
+      <div className="border-b pb-5">
         {data.lessonProgress.length > 0 ? (
           <Button
             variant="outline"
-            className="bg-green-500/10 text-green-500 hover:text-green-600 w-full sm:w-auto text-sm"
-            size="sm"
+            className="w-full border-transparent bg-success-soft text-success hover:bg-success-soft hover:text-success sm:w-auto"
           >
-            <CheckCircle className="size-4 mr-2 text-green-500" />
+            <CheckCircle className="size-4" />
             Completed
           </Button>
         ) : (
-          <Button 
-            variant="outline" 
-            onClick={onSubmit} 
+          <Button
+            variant="outline"
+            onClick={onSubmit}
             disabled={pending}
-            className="w-full sm:w-auto text-sm"
-            size="sm"
+            className="w-full border-success text-success hover:bg-success-soft hover:text-success sm:w-auto"
           >
-            <CheckCircle className="size-4 mr-2 text-green-500" />
+            <CheckCircle className="size-4" />
             Mark as Complete
           </Button>
         )}
       </div>
 
-      <div className="space-y-2 sm:space-y-3 pt-3 overflow-y-auto">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
+      <div className="space-y-3 overflow-y-auto">
+        <h1 className="font-serif text-2xl font-medium tracking-tight text-foreground lg:text-[34px]">
           {data.title}
         </h1>
 
         {data.description && (
-          <div className="prose prose-sm sm:prose max-w-none">
+          <div className="prose prose-sm sm:prose max-w-3xl text-muted-foreground dark:prose-invert">
             <RenderDescription json={data.description} />
           </div>
         )}

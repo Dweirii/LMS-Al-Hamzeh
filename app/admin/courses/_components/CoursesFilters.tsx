@@ -70,19 +70,20 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
   }, [filteredCourses, onFilteredCourses]);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mb-6">
-      <div className="relative flex-1">
+    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      <div className="relative w-full sm:max-w-[420px] sm:flex-1">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
         <Input
           placeholder="Search courses by title or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
+          aria-label="Search courses"
         />
       </div>
       
       <Select value={instructorFilter} onValueChange={(value: InstructorFilter) => setInstructorFilter(value)}>
-        <SelectTrigger className="w-full sm:w-[200px]">
+        <SelectTrigger className="w-full sm:w-[200px]" aria-label="Filter by instructor">
           <SelectValue placeholder="Filter by instructor" />
         </SelectTrigger>
         <SelectContent>
@@ -97,7 +98,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
       </Select>
 
       <Select value={universityFilter} onValueChange={(value: UniversityFilter) => setUniversityFilter(value)}>
-        <SelectTrigger className="w-full sm:w-[180px]">
+        <SelectTrigger className="w-full sm:w-[190px]" aria-label="Filter by university">
           <SelectValue placeholder="Filter by university" />
         </SelectTrigger>
         <SelectContent>
@@ -108,7 +109,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
       </Select>
 
       <Select value={statusFilter} onValueChange={(value: StatusFilter) => setStatusFilter(value)}>
-        <SelectTrigger className="w-full sm:w-[150px]">
+        <SelectTrigger className="w-full sm:w-[160px]" aria-label="Filter by status">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>

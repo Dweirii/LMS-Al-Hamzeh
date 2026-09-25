@@ -108,23 +108,23 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
   const hasActiveFilters = searchTerm || selectedInstructor !== "all" || selectedUniversity !== "all" || selectedCategory !== "all" || selectedLevel !== "all";
 
   return (
-    <div className="space-y-4 mb-8">
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-        <Input
-          placeholder="Search courses, instructors, or descriptions..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10"
-        />
-      </div>
+    <div className="mb-6 flex flex-col gap-3.5 rounded-xl border bg-card p-4 shadow-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Search Bar */}
+        <div className="relative w-full lg:w-[380px]">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search courses, instructors, or descriptions..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+            aria-label="Search courses"
+          />
+        </div>
 
-      {/* Filter Controls */}
-      <div className="flex flex-wrap gap-4 items-center">
         {/* Instructor Filter */}
         <Select value={selectedInstructor} onValueChange={setSelectedInstructor}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[180px]" aria-label="Filter by instructor">
             <SelectValue placeholder="All Instructors" />
           </SelectTrigger>
           <SelectContent>
@@ -140,7 +140,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
 
         {/* University Filter */}
         <Select value={selectedUniversity} onValueChange={setSelectedUniversity}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[200px]" aria-label="Filter by university">
             <SelectValue placeholder="All Universities" />
           </SelectTrigger>
           <SelectContent>
@@ -155,7 +155,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
 
         {/* Category Filter */}
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px]" aria-label="Filter by category">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
@@ -170,7 +170,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
 
         {/* Level Filter */}
         <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-[150px]" aria-label="Filter by level">
             <SelectValue placeholder="All Levels" />
           </SelectTrigger>
           <SelectContent>
@@ -182,71 +182,79 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
             ))}
           </SelectContent>
         </Select>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={clearFilters}
-            className="flex items-center gap-2"
-          >
-            <X className="size-4" />
-            Clear Filters
-          </Button>
-        )}
       </div>
 
       {/* Active Filters Display */}
       {hasActiveFilters && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2 border-t pt-3">
+          <span className="mr-1 text-[12.5px] text-muted-foreground">
+            Active filters
+          </span>
           {searchTerm && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              Search: {searchTerm}
-              <X 
-                className="size-3 cursor-pointer" 
-                onClick={() => setSearchTerm("")}
-              />
-            </Badge>
+            <FilterChip label={`Search: ${searchTerm}`} onRemove={() => setSearchTerm("")} />
           )}
           {selectedInstructor !== "all" && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              Instructor: {selectedInstructor === "no-instructor" ? "No Instructor" : selectedInstructor}
-              <X 
-                className="size-3 cursor-pointer" 
-                onClick={() => setSelectedInstructor("all")}
-              />
-            </Badge>
+            <FilterChip
+              label={`Instructor: ${selectedInstructor === "no-instructor" ? "No Instructor" : selectedInstructor}`}
+              onRemove={() => setSelectedInstructor("all")}
+            />
           )}
           {selectedUniversity !== "all" && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              University: {selectedUniversity === "UJ" ? "University of Jordan" : "Petra University"}
-              <X 
-                className="size-3 cursor-pointer" 
-                onClick={() => setSelectedUniversity("all")}
-              />
-            </Badge>
+            <FilterChip
+              label={`University: ${selectedUniversity === "UJ" ? "University of Jordan" : "Petra University"}`}
+              onRemove={() => setSelectedUniversity("all")}
+            />
           )}
           {selectedCategory !== "all" && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              Category: {selectedCategory}
-              <X 
-                className="size-3 cursor-pointer" 
-                onClick={() => setSelectedCategory("all")}
-              />
-            </Badge>
+            <FilterChip
+              label={`Category: ${selectedCategory}`}
+              onRemove={() => setSelectedCategory("all")}
+            />
           )}
           {selectedLevel !== "all" && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              Level: {selectedLevel}
-              <X 
-                className="size-3 cursor-pointer" 
-                onClick={() => setSelectedLevel("all")}
-              />
-            </Badge>
+            <FilterChip
+              label={`Level: ${selectedLevel}`}
+              onRemove={() => setSelectedLevel("all")}
+            />
           )}
+
+          {/* Clear Filters Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearFilters}
+            className="ml-auto flex items-center gap-2"
+          >
+            <X className="size-4" />
+            Clear Filters
+          </Button>
         </div>
       )}
     </div>
+  );
+}
+
+function FilterChip({
+  label,
+  onRemove,
+}: {
+  label: string;
+  onRemove: () => void;
+}) {
+  return (
+    <Badge
+      variant="secondary"
+      className="h-7 gap-1.5 border-transparent bg-brand-soft pr-1 pl-3 text-[12.5px] text-primary"
+    >
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove filter ${label}`}
+        className="flex size-5 items-center justify-center rounded-full hover:bg-primary/10"
+      >
+        <X className="size-3" />
+      </button>
+    </Badge>
   );
 }

@@ -16,17 +16,16 @@ export function EmptyState({
   href,
 }: iAppProps) {
   return (
-    <div className="flex flex-col flex-1 h-full items-center justify-center rounded-md border-dashed border p-8 text-center animate-in fade-in-50">
-      <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
-        <Ban className="size-10 text-primary" />
+    <div className="flex h-full flex-1 flex-col items-center justify-center rounded-xl border border-dashed bg-card/60 p-10 text-center animate-in fade-in-50">
+      <div className="flex size-16 items-center justify-center rounded-2xl bg-brand-soft">
+        <Ban className="size-8 text-primary" />
       </div>
-      <h2 className="mt-6 text-xl font-semibold">{title}</h2>
-      <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground">
+      <h2 className="mt-5 font-serif text-xl font-medium">{title}</h2>
+      <p className="mt-2 mb-7 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
         {description}
       </p>
       <Link href={href} className={buttonVariants()}>
-        <PlusCircle className="size-4 mr-2" />
-
+        <PlusCircle className="size-4" />
         {buttonText}
       </Link>
     </div>

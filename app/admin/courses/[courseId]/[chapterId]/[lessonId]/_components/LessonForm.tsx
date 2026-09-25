@@ -70,9 +70,9 @@ export function LessonForm({ chapterId, data, courseId }: iAppProps) {
     });
   }
   return (
-    <div>
+    <div className="flex max-w-4xl flex-col gap-6">
       <Link
-        className={buttonVariants({ variant: "outline", className: "mb-6" })}
+        className={buttonVariants({ variant: "outline", className: "w-fit" })}
         href={`/admin/courses/${courseId}/edit`}
       >
         <ArrowLeft className="size-4" />
@@ -82,7 +82,9 @@ export function LessonForm({ chapterId, data, courseId }: iAppProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Lesson Configuration</CardTitle>
+          <CardTitle className="font-serif text-2xl font-medium">
+            Lesson Configuration
+          </CardTitle>
           <CardDescription>
             Configure the video and description for this lesson.
           </CardDescription>
@@ -117,6 +119,7 @@ export function LessonForm({ chapterId, data, courseId }: iAppProps) {
                   </FormItem>
                 )}
               />
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               <FormField
                 control={form.control}
                 name="thumbnailKey"
@@ -151,10 +154,13 @@ export function LessonForm({ chapterId, data, courseId }: iAppProps) {
                   </FormItem>
                 )}
               />
+              </div>
 
-              <Button disabled={pending} type="submit">
-                {pending ? "Saving.." : "Save Lesson"}
-              </Button>
+              <div className="flex justify-end border-t pt-5">
+                <Button disabled={pending} type="submit">
+                  {pending ? "Saving.." : "Save Lesson"}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

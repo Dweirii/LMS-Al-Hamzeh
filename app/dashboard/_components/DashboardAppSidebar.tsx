@@ -10,7 +10,7 @@ import {
   IconSearch,
   IconSettings,
 } from "@tabler/icons-react";
-import Logo from "@/public/logo.png";
+import { Logo } from "@/components/general/Logo";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
@@ -25,7 +25,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import Image from "next/image";
 
 const data = {
   navMain: [
@@ -105,16 +104,18 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="px-3 pt-4 pb-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="h-auto hover:bg-transparent active:bg-transparent data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link href="/">
-                <Image src={Logo} alt="Logo" className="size-5" />
-                <span className="text-base font-semibold">GATA3A .</span>
+              <Link href="/" className="flex items-center gap-2.5">
+                <Logo className="h-7 w-auto" />
+                <span className="rounded-md border border-sidebar-border px-1.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-sidebar-foreground/80">
+                  Student
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -125,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="p-3">
         <NavUser />
       </SidebarFooter>
     </Sidebar>

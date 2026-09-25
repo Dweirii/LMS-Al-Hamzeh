@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { UniversityBadge } from "@/components/general/UniversityBadge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -27,7 +28,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Search, Plus, Edit, Trash2, GraduationCap } from "lucide-react";
 import { format } from "date-fns";
@@ -75,28 +75,6 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
       return matchesSearch && matchesFilter;
     });
   }, [instructors, searchTerm, filter]);
-
-  const getUniversityBadgeVariant = (university: string) => {
-    switch (university) {
-      case "UJ":
-        return "default";
-      case "PETRA":
-        return "secondary";
-      default:
-        return "outline";
-    }
-  };
-
-  const getUniversityColor = (university: string) => {
-    switch (university) {
-      case "UJ":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "PETRA":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
 
   const formatDate = (date: Date) => {
     return format(date, "MMM dd, yyyy");
@@ -192,19 +170,20 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
   return (
     <div className="space-y-4">
       {/* Header with Add Button */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between">
-        <div className="flex flex-col sm:flex-row gap-4 flex-1">
-          <div className="relative flex-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative w-full sm:max-w-[420px] sm:flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search instructors by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
+              aria-label="Search instructors"
             />
           </div>
           <Select value={filter} onValueChange={(value: FilterType) => setFilter(value)}>
-            <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectTrigger className="w-full sm:w-[200px]" aria-label="Filter by university">
               <SelectValue placeholder="Filter by university" />
             </SelectTrigger>
             <SelectContent>
@@ -287,7 +266,7 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
       </div>
 
       {/* Instructors Table */}
-      <div className="rounded-md border">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -302,23 +281,18 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
             {filteredInstructors.map((instructor) => (
               <TableRow key={instructor.id}>
                 <TableCell>
-                  <div className="flex items-center space-x-3">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-9 items-center justify-center rounded-full bg-brand-soft">
                       <GraduationCap className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <div className="font-medium">{instructor.name}</div>
-                      <div className="text-sm text-muted-foreground">{instructor.email}</div>
+                      <div className="text-[13px] text-muted-foreground">{instructor.email}</div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge 
-                    variant={getUniversityBadgeVariant(instructor.university)}
-                    className={getUniversityColor(instructor.university)}
-                  >
-                    {instructor.university === "UJ" ? "University of Jordan" : "Petra University"}
-                  </Badge>
+                  <UniversityBadge university={instructor.university} long />
                 </TableCell>
                 <TableCell>
                   <span className="font-medium">{instructor.totalCourses}</span>
@@ -332,7 +306,7 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => openEditDialog(instructor)}
                     >
@@ -340,8 +314,9 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
                       Edit
                     </Button>
                     <Button
-                      variant="destructive"
+                      variant="ghost"
                       size="sm"
+                      className="text-danger hover:bg-danger-soft hover:text-danger"
                       onClick={() => openDeleteDialog(instructor)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
@@ -444,7 +419,7 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
       {filteredInstructors.length === 0 && (
         <div className="text-center py-8">
           <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">No instructors found</h3>
+          <h3 className="font-serif text-lg font-medium">No instructors found</h3>
           <p className="text-muted-foreground">
             {searchTerm || filter !== "all" 
               ? "Try adjusting your search or filter criteria."

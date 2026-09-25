@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "lms-alhamzeh.fly.storage.tigris.dev",
+        hostname: "gata3a.t3.tigrisfiles.io",
       },
       ...devOnlyImageHosts,
     ],

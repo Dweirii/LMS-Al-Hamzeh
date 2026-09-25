@@ -40,13 +40,20 @@ export default function DeleteCourseRoute() {
     });
   }
   return (
-    <div className="max-w-xl mx-auto w-full">
-      <Card className="mt-32">
-        <CardHeader>
-          <CardTitle>Are you sure you want to delete this course?</CardTitle>
-          <CardDescription>This action cannot be undone.</CardDescription>
+    <div className="mx-auto flex w-full max-w-[520px] flex-1 items-center">
+      <Card className="mt-16 w-full gap-6 p-8 sm:mt-24">
+        <CardHeader className="gap-3 px-0">
+          <span className="flex size-[52px] items-center justify-center rounded-full bg-danger-soft text-danger">
+            <Trash2 className="size-6" aria-hidden="true" />
+          </span>
+          <CardTitle className="font-serif text-2xl leading-snug font-medium">
+            Are you sure you want to delete this course?
+          </CardTitle>
+          <CardDescription className="text-[14.5px]">
+            This action cannot be undone.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-between">
+        <CardContent className="flex items-center justify-end gap-2.5 px-0">
           <Link
             className={buttonVariants({ variant: "outline" })}
             href="/admin/courses"

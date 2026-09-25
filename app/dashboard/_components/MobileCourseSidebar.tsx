@@ -45,7 +45,7 @@ export function MobileCourseSidebar({ course }: iAppProps) {
       <div className="flex items-center justify-between p-3 gap-2">
         {/* Course Title */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+          <div className="size-8 rounded-lg bg-brand-soft flex items-center justify-center shrink-0">
             <Play className="size-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
@@ -80,11 +80,11 @@ export function MobileCourseSidebar({ course }: iAppProps) {
             <div className="flex flex-col h-full">
               <SheetHeader className="p-4 pb-3 border-b bg-muted/30">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <div className="size-10 rounded-lg bg-brand-soft flex items-center justify-center shrink-0">
                     <Play className="size-5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <SheetTitle className="text-left text-base truncate">
+                    <SheetTitle className="text-left font-serif text-lg font-medium truncate">
                       {course.title}
                     </SheetTitle>
                     <p className="text-xs text-muted-foreground">
@@ -96,7 +96,7 @@ export function MobileCourseSidebar({ course }: iAppProps) {
               
               <div className="flex-1 overflow-y-auto">
                 {/* Progress Section */}
-                <div className="p-4 border-b border-border bg-gradient-to-br from-primary/5 to-transparent">
+                <div className="p-4 border-b border-border bg-muted/40">
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-xs font-medium text-muted-foreground">Your Progress</span>
@@ -117,13 +117,13 @@ export function MobileCourseSidebar({ course }: iAppProps) {
                 </div>
 
                 {/* Chapters and Lessons */}
-                <div className="py-4 px-4 space-y-3">
+                <div className="p-3 space-y-1">
                   {course.chapter.map((chapter, index) => (
                     <Collapsible key={chapter.id} defaultOpen={index === 0}>
                       <CollapsibleTrigger asChild>
                         <Button
-                          variant="outline"
-                          className="w-full p-3 h-auto flex items-center gap-2"
+                          variant="ghost"
+                          className="w-full p-2.5 h-auto flex items-center gap-2.5 data-[state=open]:bg-muted"
                         >
                           <div className="shrink-0">
                             <ChevronDown className="size-4 text-primary" />
@@ -138,7 +138,7 @@ export function MobileCourseSidebar({ course }: iAppProps) {
                           </div>
                         </Button>
                       </CollapsibleTrigger>
-                      <CollapsibleContent className="mt-3 pl-6 border-l-2 space-y-3">
+                      <CollapsibleContent className="mt-1 mb-1.5 ml-[18px] space-y-0.5 border-l-[1.5px] pl-2.5">
                         {chapter.lessons.map((lesson) => (
                           <div key={lesson.id} onClick={() => setOpen(false)}>
                             <LessonItem
@@ -168,7 +168,7 @@ export function MobileCourseSidebar({ course }: iAppProps) {
                     variant="outline"
                     className="w-full gap-2 h-auto py-2.5 justify-start hover:bg-primary/5"
                   >
-                    <div className="p-1.5 bg-primary/10 rounded-lg">
+                    <div className="p-1.5 bg-brand-soft rounded-lg">
                       <BookOpen className="h-3.5 w-3.5 text-primary" />
                     </div>
                     <span className="text-sm">Course Materials</span>

@@ -5,6 +5,7 @@ import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -25,14 +26,14 @@ export function NavMain({
   const pathname = usePathname();
   return (
     <SidebarGroup>
-      <SidebarGroupContent className="flex flex-col gap-2">
+      <SidebarGroupContent className="flex flex-col gap-3">
         {pathname.startsWith("/admin") && (
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
               <SidebarMenuButton
                 asChild
                 tooltip="Quick Create"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+                className="h-10 bg-sidebar-primary font-medium text-sidebar-primary-foreground hover:bg-sidebar-primary/90 hover:text-sidebar-primary-foreground active:bg-sidebar-primary/90 active:text-sidebar-primary-foreground min-w-8 duration-200 ease-linear"
               >
                 <Link href="/admin/courses/create">
                   <IconCirclePlusFilled />
@@ -42,26 +43,39 @@ export function NavMain({
             </SidebarMenuItem>
           </SidebarMenu>
         )}
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} asChild>
-                <Link
-                  href={item.url}
-                  className={cn(
-                    pathname === item.url && "bg-accent text-accent-foreground"
-                  )}
+        <SidebarGroupLabel className="h-6 px-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-sidebar-foreground/70">
+          Menu
+        </SidebarGroupLabel>
+        <SidebarMenu className="gap-0.5">
+          {items.map((item) => {
+            const isActive = pathname === item.url;
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  asChild
+                  isActive={isActive}
+                  className="h-10 px-3 font-medium [&>svg]:size-[18px]"
                 >
-                  {item.icon && (
-                    <item.icon
-                      className={cn(pathname === item.url && "text-primary")}
-                    />
-                  )}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+                  <Link
+                    href={item.url}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    {isActive && (
+                      <span
+                        className={cn(
+                          "ml-auto size-1.5 shrink-0 rounded-full bg-sidebar-primary"
+                        )}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

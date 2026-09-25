@@ -95,7 +95,11 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className="flex min-w-0 flex-col gap-6">
         <FormField
           control={form.control}
           name="title"
@@ -127,6 +131,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
 
           <Button
             type="button"
+            variant="outline"
             className="w-fit"
             onClick={() => {
               const titleValue = form.getValues("title");
@@ -188,8 +193,12 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
           )}
         />
 
+        </div>
+
+        <aside className="flex flex-col gap-5 rounded-xl border bg-muted/40 p-5 lg:self-start">
+          <h3 className="font-serif text-lg font-medium">Details</h3>
         {/* Instructor and University Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-5">
           <FormField
             control={form.control}
             name="instructorId"
@@ -254,7 +263,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-5">
           <FormField
             control={form.control}
             name="category"
@@ -372,7 +381,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
           )}
         />
 
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending} className="w-full">
           {pending ? (
             <>
               Creating...
@@ -384,6 +393,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
             </>
           )}
         </Button>
+        </aside>
       </form>
     </Form>
   );

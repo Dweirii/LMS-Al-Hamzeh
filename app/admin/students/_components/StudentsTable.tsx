@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { StatusBadge } from "@/components/general/StatusBadge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -64,9 +65,9 @@ export function StudentsTable({ students }: StudentsTableProps) {
 
   const getStatusBadge = (banned: boolean | null) => {
     if (banned) {
-      return <Badge variant="destructive">Banned</Badge>;
+      return <StatusBadge status="Banned" />;
     }
-    return <Badge variant="default" className="bg-green-500">Active</Badge>;
+    return <StatusBadge status="Active" />;
   };
 
   const formatDate = (date: Date) => {
@@ -80,18 +81,19 @@ export function StudentsTable({ students }: StudentsTableProps) {
   return (
     <div className="space-y-4">
       {/* Search and Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:max-w-[420px] sm:flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search students by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
+            aria-label="Search students"
           />
         </div>
         <Select value={filter} onValueChange={(value: FilterType) => setFilter(value)}>
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filter by status">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -103,7 +105,7 @@ export function StudentsTable({ students }: StudentsTableProps) {
       </div>
 
       {/* Students Table */}
-      <div className="rounded-md border">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -121,9 +123,14 @@ export function StudentsTable({ students }: StudentsTableProps) {
             {filteredStudents.map((student) => (
               <TableRow key={student.id}>
                 <TableCell>
-                  <div>
-                    <div className="font-medium">{student.name}</div>
-                    <div className="text-sm text-muted-foreground">{student.email}</div>
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-semibold text-primary">
+                      {(student.name || student.email).charAt(0).toUpperCase()}
+                    </span>
+                    <div>
+                      <div className="font-medium">{student.name}</div>
+                      <div className="text-[13px] text-muted-foreground">{student.email}</div>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -139,10 +146,10 @@ export function StudentsTable({ students }: StudentsTableProps) {
                   <span className="font-medium">{student.totalCompletedLessons}</span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Progress 
-                      value={student.averageProgressPercentage} 
-                      className="flex-1 h-2"
+                  <div className="flex min-w-40 items-center gap-2.5">
+                    <Progress
+                      value={student.averageProgressPercentage}
+                      className="h-1.5 flex-1"
                     />
                     <span className="text-sm text-muted-foreground min-w-[3rem] text-right">
                       {student.averageProgressPercentage}%
@@ -169,9 +176,9 @@ export function StudentsTable({ students }: StudentsTableProps) {
       </div>
 
       {filteredStudents.length === 0 && (
-        <div className="text-center py-8">
-          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">No students found</h3>
+        <div className="rounded-xl border border-dashed bg-card/60 py-12 text-center">
+          <Users className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+          <h3 className="font-serif text-lg font-medium">No students found</h3>
           <p className="text-muted-foreground">
             {searchTerm || filter !== "all" 
               ? "Try adjusting your search or filter criteria."

@@ -25,12 +25,12 @@ export async function MaterialsList() {
 
   if (materials.length === 0) {
     return (
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardContent className="flex flex-col items-center justify-center py-12">
           <div className="p-4 bg-muted/50 rounded-full mb-4">
             <FileText className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">No materials yet</h3>
+          <h3 className="mb-2 font-serif text-lg font-medium">No materials yet</h3>
           <p className="text-muted-foreground text-center mb-4">
             Upload your first course material to get started
           </p>
@@ -40,7 +40,7 @@ export async function MaterialsList() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {materials.map((material) => (
         <MaterialCard
           key={material.id}

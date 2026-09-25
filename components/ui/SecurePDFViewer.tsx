@@ -231,7 +231,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
 
   if (loading) {
     return (
-      <Card className={`rounded-2xl border-0 shadow-sm ${className}`}>
+      <Card className={`rounded-xl border shadow-sm ${className}`}>
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
@@ -244,11 +244,11 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
 
   if (error) {
     return (
-      <Card className={`rounded-2xl border-0 shadow-sm ${className}`}>
+      <Card className={`rounded-xl border shadow-sm ${className}`}>
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Error Loading PDF</h3>
+            <h3 className="mb-2 font-serif text-lg font-medium">Error Loading PDF</h3>
             <p className="text-muted-foreground mb-4">{error}</p>
             <Button onClick={handleRetry} variant="outline" className="gap-2">
               <RefreshCw className="h-4 w-4" />
@@ -261,10 +261,10 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
   }
 
   return (
-    <Card className={`rounded-2xl border-0 shadow-sm ${className}`}>
+    <Card className={`rounded-xl border shadow-sm ${className}`}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2.5 text-base font-semibold">
+          <FileText className="h-5 w-5 text-primary" />
           {title}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -274,7 +274,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
       
       <CardContent>
         {/* Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-2 sm:p-3 bg-muted/50 rounded-lg">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-2 sm:p-2.5 bg-muted/60 rounded-xl">
           <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
             <Button
               variant="outline"
@@ -287,7 +287,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
               <span className="hidden sm:inline ml-1">Prev</span>
             </Button>
             
-            <span className="text-xs sm:text-sm font-medium px-1 sm:px-2">
+            <span className="font-mono text-xs sm:text-sm font-medium px-1 sm:px-2">
               {currentPage} / {totalPages}
             </span>
             
@@ -325,7 +325,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         {/* PDF Canvas */}
         <div 
           ref={containerRef}
-          className="border rounded-lg overflow-auto bg-white"
+          className="border rounded-xl overflow-auto bg-muted/40"
           style={{ maxHeight: '70vh' }}
           tabIndex={0}
         >
@@ -340,12 +340,12 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         </div>
 
         {/* Security Warning */}
-        <div className="mt-3 md:mt-4 p-2 md:p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-          <div className="flex items-center gap-2 text-xs md:text-sm text-amber-800 dark:text-amber-200">
+        <div className="mt-3 md:mt-4 p-2 md:p-3 bg-warning-soft rounded-lg border border-transparent">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-warning">
             <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
             <span className="font-medium">Protected Content</span>
           </div>
-          <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300 mt-1">
+          <p className="text-xs md:text-sm text-warning mt-1">
             This PDF is protected. Right-click, printing, and downloading are disabled.
           </p>
         </div>

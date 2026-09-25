@@ -7,12 +7,13 @@ export const dynamic = "force-dynamic";
 
 export default function PublicCoursesroute() {
   return (
-    <div className="mt-5">
-      <div className="flex flex-col space-y-2 mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tighter">
+    <div className="mt-12">
+      <div className="mb-8 flex flex-col gap-2">
+        <p className="eyebrow">Catalog</p>
+        <h1 className="font-serif text-4xl font-medium tracking-tight md:text-5xl">
           Explore Courses
         </h1>
-        <p className="text-muted-foreground ">
+        <p className="text-base text-muted-foreground md:text-[17px]">
           Discover our wide range of courses designed to help you achieve your
           learning goals.
         </p>

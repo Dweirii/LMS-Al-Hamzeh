@@ -34,11 +34,20 @@ export function UserDropdown({ email, name, image }: iAppProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
-          <Avatar>
+        <Button
+          variant="ghost"
+          aria-label="Account menu"
+          className="h-10 rounded-full border bg-card py-0 pl-1 pr-2.5 hover:bg-accent"
+        >
+          <Avatar className="size-8">
             <AvatarImage src={image} alt="Profile image" />
-            <AvatarFallback>{name[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback className="bg-brand-soft font-semibold text-primary">
+              {name[0].toUpperCase()}
+            </AvatarFallback>
           </Avatar>
+          <span className="max-w-32 truncate text-[13px] font-medium text-foreground">
+            {name}
+          </span>
           <ChevronDownIcon
             size={16}
             className="opacity-60"
@@ -52,7 +61,7 @@ export function UserDropdown({ email, name, image }: iAppProps) {
             {name}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            john@john.com
+            {email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -64,7 +73,7 @@ export function UserDropdown({ email, name, image }: iAppProps) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/course">
+            <Link href="/courses">
               <BookOpen size={16} className="opacity-60" aria-hidden="true" />
               <span>Courses</span>
             </Link>

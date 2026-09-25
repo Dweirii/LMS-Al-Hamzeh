@@ -17,9 +17,10 @@ export default async function CourseCreationPage() {
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3.5">
         <Link
           href="/admin/courses"
+          aria-label="Back to courses"
           className={buttonVariants({
             variant: "outline",
             size: "icon",
@@ -27,12 +28,19 @@ export default async function CourseCreationPage() {
         >
           <ArrowLeft className="size-4" />
         </Link>
-        <h1 className="text-2xl font-bold">Create Course</h1>
+        <div>
+          <p className="eyebrow">Courses</p>
+          <h1 className="font-serif text-3xl font-medium tracking-tight">
+            Create Course
+          </h1>
+        </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle className="font-serif text-xl font-medium">
+            Basic Information
+          </CardTitle>
           <CardDescription>
             Provide basic information about the course
           </CardDescription>

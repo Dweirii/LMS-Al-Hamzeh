@@ -34,7 +34,7 @@ export function Menubar({ editor }: iAppProps) {
   }
 
   return (
-    <div className="border border-input border-t-0 border-x-0  rounded-t-lg p-2 bg-card flex flex-wrap gap-1 items-center">
+    <div className="border border-input border-t-0 border-x-0 rounded-t-lg p-1.5 bg-muted/60 flex flex-wrap gap-1 items-center">
       <TooltipProvider>
         <div className="flex flex-wrap gap-1">
           <Tooltip>

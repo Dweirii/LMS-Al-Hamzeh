@@ -301,12 +301,19 @@ export function CourseStructure({ data }: iAppProps) {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between border-b border-border">
-          <CardTitle>Chapters</CardTitle>
+      <Card className="gap-5">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="font-serif text-xl font-medium">
+              Chapters
+            </CardTitle>
+            <p className="mt-1 text-[13.5px] text-muted-foreground">
+              Drag chapters and lessons to reorder them.
+            </p>
+          </div>
           <NewChapterModal courseId={data.id} />
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="flex flex-col gap-2.5">
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((item) => (
               <SortableItem
@@ -315,21 +322,33 @@ export function CourseStructure({ data }: iAppProps) {
                 key={item.id}
               >
                 {(listeners) => (
-                  <Card>
+                  <Card
+                    className={cn(
+                      "gap-0 py-0 shadow-none",
+                      item.isOpen && "bg-muted/40"
+                    )}
+                  >
                     <Collapsible
                       open={item.isOpen}
                       onOpenChange={() => toggleChapter(item.id)}
                     >
-                      <div className="flex items-center justify-between p-3 border-b border-border">
+                      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" {...listeners}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Drag to reorder chapter"
+                            className="size-8 cursor-grab text-muted-foreground"
+                            {...listeners}
+                          >
                             <GripVertical className="size-4" />
                           </Button>
                           <CollapsibleTrigger asChild>
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="flex items-center"
+                              aria-label="Toggle chapter"
+                              className="flex size-8 items-center text-muted-foreground"
                             >
                               {item.isOpen ? (
                                 <ChevronDown className="size-4" />
@@ -339,7 +358,7 @@ export function CourseStructure({ data }: iAppProps) {
                             </Button>
                           </CollapsibleTrigger>
 
-                          <p className="cursor-pointer hover:text-primary pl-2">
+                          <p className="cursor-pointer pl-1 font-semibold hover:text-primary">
                             {item.title}
                           </p>
                         </div>
@@ -348,7 +367,7 @@ export function CourseStructure({ data }: iAppProps) {
                       </div>
 
                       <CollapsibleContent>
-                        <div className="p-1">
+                        <div className="flex flex-col gap-2 px-3 pb-3 sm:pl-12">
                           <SortableContext
                             items={item.lessons.map((lesson) => lesson.id)}
                             strategy={verticalListSortingStrategy}
@@ -360,18 +379,21 @@ export function CourseStructure({ data }: iAppProps) {
                                 data={{ type: "lesson", chapterId: item.id }}
                               >
                                 {(lessonListeners) => (
-                                  <div className="flex items-center justify-between p-2 hover:bg-accent rounded-sm">
+                                  <div className="flex items-center justify-between rounded-lg border bg-card px-2 py-1.5 hover:bg-accent/50">
                                     <div className="flex items-center gap-2">
                                       <Button
                                         variant="ghost"
                                         size="icon"
+                                        aria-label="Drag to reorder lesson"
+                                        className="size-8 cursor-grab text-muted-foreground"
                                         {...lessonListeners}
                                       >
                                         <GripVertical className="size-4" />
                                       </Button>
-                                      <FileText className="size-4" />
+                                      <FileText className="size-4 text-muted-foreground" />
                                       <Link
                                         href={`/admin/courses/${data.id}/${item.id}/${lesson.id}`}
+                                        className="text-sm hover:text-primary"
                                       >
                                         {lesson.title}
                                       </Link>
@@ -406,7 +428,7 @@ export function CourseStructure({ data }: iAppProps) {
                               </SortableItem>
                             ))}
                           </SortableContext>
-                          <div className="p-2">
+                          <div>
                             <NewLessonModal
                               chapterId={item.id}
                               courseId={data.id}

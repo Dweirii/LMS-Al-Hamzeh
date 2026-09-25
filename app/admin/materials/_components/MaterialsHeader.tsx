@@ -80,14 +80,17 @@ export function MaterialsHeader({ courses = [] }: MaterialsHeaderProps) {
   };
 
   return (
-    <div className="flex items-center justify-between mb-6">
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-primary/10 rounded-xl">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex items-center gap-3.5">
+        <div className="rounded-xl bg-brand-soft p-3">
           <BookOpen className="h-6 w-6 text-primary" />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">Course Materials</h1>
-          <p className="text-muted-foreground">
+        <div className="flex flex-col gap-1">
+          <p className="eyebrow">Content</p>
+          <h1 className="font-serif text-3xl font-medium tracking-tight">
+            Course Materials
+          </h1>
+          <p className="text-[15px] text-muted-foreground">
             Manage course materials and resources
           </p>
         </div>

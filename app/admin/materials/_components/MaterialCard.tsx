@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/general/StatusBadge";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -15,7 +15,8 @@ import {
   Eye, 
   Trash, 
   MoreHorizontal,
-  Calendar
+  Calendar,
+  FileText
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -82,20 +83,23 @@ export function MaterialCard({ material }: { material: Material }) {
   };
 
   return (
-    <Card className="rounded-2xl border-0 shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
+    <Card className="gap-4 rounded-xl border py-5 shadow-sm transition-shadow hover:shadow-md">
+      <CardHeader className="px-5">
+        <div className="flex items-start gap-3">
+          <div className="flex size-[42px] shrink-0 items-center justify-center rounded-lg bg-brand-soft">
+            <FileText className="size-5 text-primary" aria-hidden="true" />
+          </div>
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg font-semibold truncate">
+            <CardTitle className="truncate text-[15px] leading-snug font-semibold">
               {material.title}
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="mt-1 truncate text-[13px] text-muted-foreground">
               {material.course.title}
             </p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label="Material actions">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -113,17 +117,15 @@ export function MaterialCard({ material }: { material: Material }) {
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
+      <CardContent className="px-5">
+        <div className="flex items-center justify-between border-t pt-3.5">
+          <div className="flex items-center gap-1.5 text-[12.5px] text-muted-foreground">
+            <Calendar className="h-3.5 w-3.5" />
             {new Date(material.createdAt).toLocaleDateString()}
           </div>
           
           <div className="flex items-center gap-2">
-            <Badge variant={isVisible ? "default" : "secondary"}>
-              {isVisible ? "Visible" : "Hidden"}
-            </Badge>
+            <StatusBadge status={isVisible ? "Visible" : "Hidden"} />
             <Switch
               checked={isVisible}
               onCheckedChange={handleToggleVisibility}

@@ -82,7 +82,7 @@ export function NewLessonModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full justify-center gap-1">
+        <Button variant="outline" className="w-full justify-center gap-1.5 border-dashed">
           <Plus className="size-4" /> New Lesson
         </Button>
       </DialogTrigger>
