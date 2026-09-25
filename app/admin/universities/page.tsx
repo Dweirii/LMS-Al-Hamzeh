@@ -1,5 +1,6 @@
 import { getUniversityStats } from "../instructors/actions";
 import { UniversitiesStatsCards } from "./_components/UniversitiesStatsCards";
+import { PageHeader } from "@/components/general/PageHeader";
 
 export default async function UniversitiesPage() {
   const result = await getUniversityStats();
@@ -7,12 +8,11 @@ export default async function UniversitiesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Universities Overview</h1>
-        <p className="text-muted-foreground">
-          Track performance and statistics across universities
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Organisation"
+        title="Universities Overview"
+        description="Track performance and statistics across universities"
+      />
       
       <UniversitiesStatsCards stats={stats} />
     </div>

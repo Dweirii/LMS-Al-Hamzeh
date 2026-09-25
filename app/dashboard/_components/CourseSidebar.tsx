@@ -29,25 +29,24 @@ export function CourseSidebar({ course }: iAppProps) {
     router.push(`/dashboard/${course.slug}/materials`);
   };
   return (
-    <div className="flex flex-col h-full">
-      <div className="pb-4 pr-4 border-b border-border">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-            <Play className="size-5 text-primary" />
+    <div className="flex h-full flex-col">
+      <div className="flex flex-col gap-3.5 border-b border-border p-5">
+        <div className="flex items-center gap-3">
+          <div className="flex size-[42px] shrink-0 items-center justify-center rounded-lg bg-brand-soft">
+            <Play className="size-[18px] text-primary" />
           </div>
-
-          <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-base leading-tight truncate">
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate font-serif text-lg leading-tight">
               {course.title}
             </h1>
-            <p className="text-xs text-muted-foreground mt-1 truncate">
+            <p className="mt-0.5 truncate text-[12.5px] text-muted-foreground">
               {course.category}
             </p>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs">
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-[12.5px]">
             <span className="text-muted-foreground">Progress</span>
             <span className="font-medium">
               {completedLessons}/{totalLessons} lessons
@@ -60,29 +59,29 @@ export function CourseSidebar({ course }: iAppProps) {
         </div>
       </div>
 
-      <div className="py-4 pr-4 space-y-3">
+      <nav
+        aria-label="Course content"
+        className="flex flex-1 flex-col gap-1 overflow-y-auto p-3"
+      >
         {course.chapter.map((chapter, index) => (
           <Collapsible key={chapter.id} defaultOpen={index === 0}>
             <CollapsibleTrigger asChild>
               <Button
-                variant="outline"
-                className="w-full p-3 h-auto flex items-center gap-2"
+                variant="ghost"
+                className="group/chapter flex h-auto w-full items-center gap-2.5 p-2.5 data-[state=open]:bg-muted"
               >
-                <div className="shrink-0">
-                  <ChevronDown className="size-4 text-primary" />
-                </div>
-                <div className="flex-1 text-left min-w-0">
-                  <p className="font-semibold text-sm truncate text-foreground">
+                <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground transition-transform group-data-[state=open]/chapter:rotate-0" />
+                <div className="min-w-0 flex-1 text-left">
+                  <p className="truncate text-[13.5px] font-semibold text-foreground">
                     {chapter.position}: {chapter.title}
                   </p>
-
-                  <p className="text-[10px] text-muted-foreground font-medium truncate">
+                  <p className="truncate text-[11.5px] font-normal text-muted-foreground">
                     {chapter.lessons.length} lessons
                   </p>
                 </div>
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3 pl-6 border-l-2 space-y-3">
+            <CollapsibleContent className="mt-1 mb-1.5 ml-[18px] space-y-0.5 border-l-[1.5px] pl-2.5">
               {chapter.lessons.map((lesson) => (
                 <LessonItem
                   key={lesson.id}
@@ -99,14 +98,14 @@ export function CourseSidebar({ course }: iAppProps) {
             </CollapsibleContent>
           </Collapsible>
         ))}
-      </div>
+      </nav>
 
       {/* Materials Section */}
-      <div className="mt-auto pt-4 pr-4 border-t border-border">
+      <div className="mt-auto border-t border-border p-3.5">
         <Button
           onClick={handleViewMaterials}
           variant="outline"
-          className="w-full gap-2 h-auto py-3"
+          className="w-full gap-2"
         >
           <BookOpen className="h-4 w-4" />
           <span>Course Materials</span>

@@ -8,7 +8,7 @@ export default async function MaterialsPage({ params }: { params: Params }) {
   const course = await getCourseSidebarData(slug);
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6 lg:px-9 lg:py-7">
       <DashboardMaterials 
         courseId={course.course.id} 
         courseSlug={course.course.slug} 

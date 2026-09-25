@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/general/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -89,15 +89,15 @@ export function MaterialDetails({ materialId }: MaterialDetailsProps) {
       </div>
 
       {/* Material Info Card */}
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-xl">
+              <div className="p-2.5 bg-brand-soft rounded-lg">
                 <FileText className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-2xl font-bold">
+                <CardTitle className="font-serif text-2xl font-medium">
                   {material.title}
                 </CardTitle>
                 <div className="flex items-center gap-2 mt-2">
@@ -108,9 +108,7 @@ export function MaterialDetails({ materialId }: MaterialDetailsProps) {
                 </div>
               </div>
             </div>
-            <Badge variant={material.isVisible ? "default" : "secondary"}>
-              {material.isVisible ? "Visible" : "Hidden"}
-            </Badge>
+            <StatusBadge status={material.isVisible ? "Visible" : "Hidden"} />
           </div>
         </CardHeader>
         
@@ -147,11 +145,11 @@ export function MaterialDetails({ materialId }: MaterialDetailsProps) {
           className="w-full"
         />
       ) : (
-        <Card className="rounded-2xl border-0 shadow-sm">
+        <Card className="rounded-xl border shadow-sm">
           <CardContent className="flex items-center justify-center py-12">
             <div className="text-center">
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Loading PDF...</h3>
+              <h3 className="mb-2 font-serif text-lg font-medium">Loading PDF...</h3>
               <p className="text-muted-foreground">
                 Preparing secure PDF viewer...
               </p>
@@ -170,7 +168,7 @@ export function MaterialSkeleton() {
         <div className="h-8 w-24 bg-muted rounded" />
       </div>
 
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
@@ -198,7 +196,7 @@ export function MaterialSkeleton() {
         </CardContent>
       </Card>
 
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="h-6 bg-muted rounded w-32" />
         </CardHeader>

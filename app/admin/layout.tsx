@@ -14,17 +14,17 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
+          "--sidebar-width": "calc(var(--spacing) * 66)",
+          "--header-height": "calc(var(--spacing) * 15)",
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar variant="sidebar" />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
+            <div className="flex flex-col gap-6 px-4 py-6 md:gap-7 lg:px-9 lg:py-8">
               {children}
             </div>
           </div>

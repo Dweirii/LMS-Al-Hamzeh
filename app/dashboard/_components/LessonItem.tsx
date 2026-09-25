@@ -1,4 +1,3 @@
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check, Play } from "lucide-react";
 import Link from "next/link";
@@ -19,69 +18,48 @@ export function LessonItem({ lesson, slug, isActive, completed }: iAppProps) {
   return (
     <Link
       href={`/dashboard/${slug}/${lesson.id}`}
-      className={buttonVariants({
-        variant: completed ? "secondary" : "outline",
-        className: cn(
-          "w-full p-2.5 h-auto justify-start transition-all",
-          completed &&
-            "bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-800 dark:text-green-200",
-
-          isActive &&
-            !completed &&
-            "bg-primary/10 dark:bg-primary/20 border-primary/50 hover:bg-primary/20 dark:hover:bg-primary/30 text-primary"
-        ),
-      })}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors",
+        isActive ? "bg-brand-soft" : "hover:bg-muted"
+      )}
     >
-      <div className="flex items-center gap-2.5 w-full min-w-0">
-        <div className="shrink-0">
-          {completed ? (
-            <div className="size-5 rounded-full bg-green-600 dark:bg-green-500 flex items-center justify-center">
-              <Check className="size-3 text-white" />
-            </div>
-          ) : (
-            <div
-              className={cn(
-                "size-5 rounded-full border-2 bg-background flex justify-center items-center",
-                isActive
-                  ? "border-primary bg-primary/10 dark:bg-primary/20"
-                  : "border-muted-foreground/60"
-              )}
-            >
-              <Play
-                className={cn(
-                  "size-2.5 fill-current",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              />
-            </div>
+      <div className="shrink-0">
+        {completed ? (
+          <div className="flex size-[22px] items-center justify-center rounded-full bg-success text-card">
+            <Check className="size-3" strokeWidth={2.5} />
+          </div>
+        ) : isActive ? (
+          <div className="flex size-[22px] items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <Play className="size-2.5 fill-current" />
+          </div>
+        ) : (
+          <div className="flex size-[22px] items-center justify-center rounded-full border-[1.5px] border-input text-muted-foreground">
+            <Play className="size-2 fill-current" />
+          </div>
+        )}
+      </div>
+      <div className="min-w-0 flex-1 text-left">
+        <p
+          className={cn(
+            "truncate text-[13.5px] font-medium",
+            completed
+              ? "text-muted-foreground"
+              : isActive
+                ? "text-primary"
+                : "text-foreground"
           )}
-        </div>
-
-        <div className="flex-1 text-left min-w-0">
-          <p
-            className={cn(
-              "test-xs font-medium truncate",
-              completed
-                ? "text-green-800 dark:text-green-200"
-                : isActive
-                  ? "text-primary font-semibold"
-                  : "text-foreground"
-            )}
-          >
-            {lesson.position}. {lesson.title}
+        >
+          {lesson.position}. {lesson.title}
+        </p>
+        {completed && (
+          <p className="text-[11.5px] font-medium text-success">Completed</p>
+        )}
+        {isActive && !completed && (
+          <p className="text-[11.5px] font-semibold text-primary">
+            Currently Watching
           </p>
-          {completed && (
-            <p className="text-[10px] text-green-700 dark:text-green-300 font-medium">
-              Completed
-            </p>
-          )}
-
-          {isActive && !completed && (
-            <p className="text-[10px] text-primary font-mediums">
-              Currently Watching
-            </p>
-          )}
-        </div>
+        )}
       </div>
     </Link>
   );

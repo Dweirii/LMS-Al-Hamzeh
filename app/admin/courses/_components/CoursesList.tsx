@@ -32,14 +32,14 @@ export function CoursesList({ courses }: CoursesListProps) {
       />
       
       {filteredCourses.length === 0 ? (
-        <div className="text-center py-8">
-          <h3 className="text-lg font-semibold">No courses match your filters</h3>
+        <div className="rounded-xl border border-dashed bg-card/60 py-12 text-center">
+          <h3 className="font-serif text-lg font-medium">No courses match your filters</h3>
           <p className="text-muted-foreground">
             Try adjusting your search or filter criteria.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-7">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {filteredCourses.map((course) => (
             <AdminCourseCard key={course.id} data={course} />
           ))}

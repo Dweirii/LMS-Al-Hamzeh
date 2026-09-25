@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function LessonSkeleton() {
   return (
-    <div className="flex flex-col h-full pl-6">
-      <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
+    <div className="flex h-full flex-col gap-6 p-4 sm:p-6 lg:px-9 lg:py-7">
+      <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
         <Skeleton className="w-full h-full" />
       </div>
 

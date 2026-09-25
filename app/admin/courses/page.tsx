@@ -6,17 +6,23 @@ import {
 } from "./_components/AdminCourseCard";
 import { Suspense } from "react";
 import { CoursesList } from "./_components/CoursesList";
+import { Plus } from "lucide-react";
+import { PageHeader } from "@/components/general/PageHeader";
 
 export default function CoursesPage() {
   return (
     <>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Your Courses</h1>
-
-        <Link className={buttonVariants()} href="/admin/courses/create">
-          Create Course
-        </Link>
-      </div>
+      <PageHeader
+        eyebrow="Courses"
+        title="Your Courses"
+        description="Create, edit and publish courses for both universities."
+        actions={
+          <Link className={buttonVariants()} href="/admin/courses/create">
+            <Plus aria-hidden="true" />
+            Create Course
+          </Link>
+        }
+      />
 
       <Suspense fallback={<AdminCourseCardSkeletonLayout />}>
         <RenderCourses />
@@ -33,7 +39,7 @@ async function RenderCourses() {
 
 function AdminCourseCardSkeletonLayout() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-7">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 4 }).map((_, index) => (
         <AdminCourseCardSkeleton key={index} />
       ))}

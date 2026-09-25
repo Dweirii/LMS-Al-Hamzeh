@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { ArrowRight, BookOpen } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/general/EmptyState";
 import { getAllCourses } from "../data/course/get-all-courses";
 import { getEnrolledCourses } from "../data/user/get-enrolled-courses";
@@ -13,11 +16,21 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold">Enrolled Courses</h1>
-        <p className="text-muted-foreground">
-          Here you can see all the courses you have access to
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-1.5">
+          <p className="eyebrow">My learning</p>
+          <h1 className="font-serif text-3xl font-medium tracking-tight">
+            Enrolled Courses
+          </h1>
+          <p className="text-[15px] text-muted-foreground">
+            Here you can see all the courses you have access to
+          </p>
+        </div>
+        <span className="inline-flex h-7 w-fit items-center gap-1.5 rounded-full bg-secondary px-3 text-xs font-medium text-secondary-foreground">
+          <BookOpen className="size-3.5" aria-hidden="true" />
+          {enrolledCourses.length}{" "}
+          {enrolledCourses.length === 1 ? "course" : "courses"}
+        </span>
       </div>
 
       {enrolledCourses.length === 0 ? (
@@ -28,19 +41,30 @@ export default async function DashboardPage() {
           href="/courses"
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {enrolledCourses.map((course) => (
             <CourseProgressCard key={course.Course.id} data={course} />
           ))}
         </div>
       )}
 
-      <section className="mt-10">
-        <div className="flex flex-col gap-2 mb-5">
-          <h1 className="text-3xl font-bold">Available Courses</h1>
-          <p className="text-muted-foreground">
-            Here you can see all the courses you can purchase
-          </p>
+      <section className="mt-6">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-1.5">
+            <h2 className="font-serif text-2xl font-medium tracking-tight">
+              Available Courses
+            </h2>
+            <p className="text-[15px] text-muted-foreground">
+              Here you can see all the courses you can purchase
+            </p>
+          </div>
+          <Link
+            href="/courses"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Browse Courses
+            <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
 
         {courses.filter(
@@ -56,7 +80,7 @@ export default async function DashboardPage() {
             href="/courses"
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {courses
               .filter(
                 (course) =>

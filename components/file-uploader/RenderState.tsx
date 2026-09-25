@@ -6,21 +6,21 @@ import Image from "next/image";
 export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
     <div className="text-center">
-      <div className="flex items-center mx-auto justify-center size-12 rounded-full bg-muted mb-4">
+      <div className="mx-auto mb-3.5 flex size-12 items-center justify-center rounded-full bg-brand-soft">
         <CloudUploadIcon
           className={cn(
-            "size-6 text-muted-foreground",
+            "size-6 text-primary",
             isDragActive && "text-primary"
           )}
         />
       </div>
-      <p className="text-base font-semibold text-foreground">
+      <p className="text-sm text-foreground">
         Drop your files here or{" "}
-        <span className="text-primary font-bold cursor-pointer">
+        <span className="cursor-pointer font-semibold text-primary">
           click to upload
         </span>
       </p>
-      <Button type="button" className="mt-4">
+      <Button type="button" variant="outline" size="sm" className="mt-4">
         Select File
       </Button>
     </div>

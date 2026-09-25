@@ -15,19 +15,19 @@ export default async function CourseLayout({ children, params }: iAppProps) {
   const course = await getCourseSidebarData(slug);
 
   return (
-    <div className="flex flex-1 flex-col lg:flex-row">
+    <div className="-mx-4 -my-6 flex min-h-[calc(100svh-var(--header-height))] flex-1 flex-col md:-my-7 lg:-mx-9 lg:-my-8 lg:flex-row">
       {/* Mobile Sidebar - Hidden on desktop */}
       <div className="lg:hidden">
         <MobileCourseSidebar course={course.course} />
       </div>
 
       {/* Desktop Sidebar - Hidden on mobile */}
-      <div className="hidden lg:block w-80 border-r border-border shrink-0">
+      <div className="hidden w-[340px] shrink-0 border-r border-border bg-card lg:block">
         <CourseSidebar course={course.course} />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">{children}</div>
+      <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
     </div>
   );
 }

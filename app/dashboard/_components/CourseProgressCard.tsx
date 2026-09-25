@@ -4,6 +4,7 @@
 import { EnrolledCourseType } from "@/app/data/user/get-enrolled-courses";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { Play } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
@@ -22,45 +23,48 @@ export function CourseProgressCard({ data }: iAppProps) {
   const { totalLessons, completedLessons, progressPercentage } =
     useCourseProgress({ courseData: data.Course as any });
   return (
-    <Card className="group relative py-0 gap-0">
-      <Badge className="absolute top-2 right-2 z-10">{data.Course.level}</Badge>
+    <Card className="group relative flex-col gap-0 overflow-hidden py-0 sm:flex-row">
+      <div className="relative shrink-0 sm:w-[220px]">
+        <Badge className="absolute top-3 left-3 z-10 border-transparent bg-foreground text-background">
+          {data.Course.level}
+        </Badge>
+        <Image
+          width={600}
+          height={400}
+          className="aspect-video h-full w-full bg-thumb-1 object-cover sm:aspect-auto"
+          src={thumbnailUrl}
+          alt="Thumbail Image of Course"
+        />
+      </div>
 
-      <Image
-        width={600}
-        height={400}
-        className="w-full rounded-t-xl aspect-video h-full object-cover"
-        src={thumbnailUrl}
-        alt="Thumbail Image of Course"
-      />
-
-      <CardContent className="p-4">
+      <CardContent className="flex min-w-0 flex-1 flex-col gap-2.5 p-5">
         <Link
-          className="font-medium text-lg line-clamp-2 hover:underline group-hover:text-primary transition-colors"
+          className="line-clamp-2 font-serif text-xl leading-snug font-medium transition-colors hover:underline group-hover:text-primary"
           href={`/dashboard/${data.Course.slug}`}
         >
           {data.Course.title}
         </Link>
-        <p className="line-clamp-2 text-sm text-muted-foreground leading-tight mt-2">
+        <p className="line-clamp-2 text-[13.5px] leading-relaxed text-muted-foreground">
           {data.Course.smallDescription}
         </p>
 
-        <div className="space-y-4 mt-5">
-          <div className="flex justify-between mb-1 text-sm">
-            <p>Progress:</p>
-            <p className="font-medium">{progressPercentage}%</p>
+        <div className="mt-1 flex flex-col gap-1.5">
+          <div className="flex justify-between text-[13px]">
+            <p className="text-muted-foreground">Progress</p>
+            <p className="font-mono font-medium">{progressPercentage}%</p>
           </div>
           <Progress value={progressPercentage} className="h-1.5" />
-
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground">
             {completedLessons} of {totalLessons} lessons completed
           </p>
         </div>
 
         <Link
           href={`/dashboard/${data.Course.slug}`}
-          className={buttonVariants({ className: "w-full mt-4" })}
+          className={buttonVariants({ className: "mt-1.5 w-fit" })}
         >
-          Learn More
+          <Play aria-hidden="true" />
+          Continue learning
         </Link>
       </CardContent>
     </Card>

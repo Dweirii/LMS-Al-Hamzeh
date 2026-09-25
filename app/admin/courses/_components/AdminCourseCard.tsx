@@ -12,15 +12,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import {
   ArrowRight,
+  BarChart3,
+  Clock,
   Eye,
   MoreVertical,
   Pencil,
-  School,
-  TimerIcon,
   Trash2,
   GraduationCap,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/general/StatusBadge";
+import { UniversityBadge } from "@/components/general/UniversityBadge";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,95 +32,98 @@ interface iAppProps {
 export function AdminCourseCard({ data }: iAppProps) {
   const thumbnailUrl = useConstructUrl(data.fileKey);
   return (
-    <Card className="group relative py-0 gap-0">
-      {/* absolute dropdrown */}
-      <div className="absolute top-2 right-2 z-10">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon">
-              <MoreVertical className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/courses/${data.id}/edit`}>
-                <Pencil className="size-4 mr-2" />
-                Edit Course
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={`/courses/${data.slug}`}>
-                <Eye className="size-4 mr-2" />
-                Preview
-              </Link>
-            </DropdownMenuItem>
+    <Card className="group relative gap-0 overflow-hidden py-0">
+      <div className="relative">
+        <div className="absolute top-3 left-3 z-10">
+          <StatusBadge status={data.status} className="bg-card/95" />
+        </div>
+        {/* absolute dropdrown */}
+        <div className="absolute top-2.5 right-2.5 z-10">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                aria-label="Course actions"
+              >
+                <MoreVertical className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link href={`/admin/courses/${data.id}/edit`}>
+                  <Pencil className="size-4 mr-2" />
+                  Edit Course
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/courses/${data.slug}`}>
+                  <Eye className="size-4 mr-2" />
+                  Preview
+                </Link>
+              </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/courses/${data.id}/delete`}>
-                <Trash2 className="size-4 mr-2 text-destructive" />
-                Delete Course
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={`/admin/courses/${data.id}/delete`}>
+                  <Trash2 className="size-4 mr-2 text-destructive" />
+                  Delete Course
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <Image
+          src={thumbnailUrl}
+          alt="Thumbnail Url"
+          width={600}
+          height={400}
+          className="aspect-video h-full w-full bg-thumb-1 object-cover"
+        />
       </div>
-      <Image
-        src={thumbnailUrl}
-        alt="Thumbnail Url"
-        width={600}
-        height={400}
-        className="w-full rounded-t-lg aspect-video h-full object-cover"
-      />
 
-      <CardContent className="p-4">
-        <Link
-          href={`/admin/courses/${data.id}/edit`}
-          className="font-medium text-lg line-clamp-2 hover:underline group-hover:text-primary transition-colors"
-        >
-          {data.title}
-        </Link>
+      <CardContent className="flex flex-1 flex-col gap-3 p-[18px]">
+        <div className="flex flex-col gap-1.5">
+          <Link
+            href={`/admin/courses/${data.id}/edit`}
+            className="line-clamp-2 font-serif text-xl leading-snug font-medium transition-colors hover:underline group-hover:text-primary"
+          >
+            {data.title}
+          </Link>
 
-        <p className="line-clamp-2 text-sm text-muted-foreground leading-tight mt-2">
-          {data.smallDescription}
-        </p>
+          <p className="line-clamp-2 text-[13.5px] leading-relaxed text-muted-foreground">
+            {data.smallDescription}
+          </p>
+        </div>
 
-        <div className="mt-4 space-y-3">
-          {/* Instructor and University Info */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-x-2">
-              <GraduationCap className="size-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {data.instructor ? data.instructor.name : "Unassigned"}
-              </p>
-            </div>
-            <Badge 
-              variant={data.university === "UJ" ? "default" : "secondary"}
-              className={data.university === "UJ" 
-                ? "bg-green-100 text-green-800 border-green-200" 
-                : "bg-blue-100 text-blue-800 border-blue-200"
-              }
-            >
-              {data.university === "UJ" ? "UJ" : "PETRA"}
-            </Badge>
-          </div>
+        {/* Instructor and University Info */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex min-w-0 items-center gap-1.5 text-[13px] text-muted-foreground">
+            <GraduationCap className="size-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">
+              {data.instructor ? data.instructor.name : "Unassigned"}
+            </span>
+          </span>
+          <UniversityBadge university={data.university} />
+        </div>
 
-          {/* Course Details */}
-          <div className="flex items-center gap-x-5">
-            <div className="flex items-center gap-x-2">
-              <TimerIcon className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-              <p className="text-sm text-muted-foreground">{data.duration}h</p>
-            </div>
-            <div className="flex items-center gap-x-2">
-              <School className="size-6 p-1 rounded-md text-primary bg-primary/10" />
-              <p className="text-sm text-muted-foreground">{data.level}</p>
-            </div>
-          </div>
+        {/* Course Details */}
+        <div className="mt-auto flex items-center gap-4 border-t pt-3 text-[13px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="size-3.5" aria-hidden="true" />
+            {data.duration}h
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <BarChart3 className="size-3.5" aria-hidden="true" />
+            {data.level}
+          </span>
         </div>
 
         <Link
           className={buttonVariants({
-            className: "w-full mt-4",
+            variant: "outline",
+            className: "w-full",
           })}
           href={`/admin/courses/${data.id}/edit`}
         >
@@ -132,29 +136,26 @@ export function AdminCourseCard({ data }: iAppProps) {
 
 export function AdminCourseCardSkeleton() {
   return (
-    <Card className="group relative py-0 gap-0">
-      <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
-        <Skeleton className="h-6 w-16 rounded-full" />
-        <Skeleton className="size-8 rounded-md" />
+    <Card className="group relative gap-0 overflow-hidden py-0">
+      <div className="absolute top-3 right-3 left-3 z-10 flex items-center justify-between">
+        <Skeleton className="h-6 w-20 rounded-full" />
+        <Skeleton className="size-8 rounded-lg" />
       </div>
-      <div className="w-full relative h-fit">
-        <Skeleton className="w-full rounded-t-lg aspect-video h-[250px] object-cover" />
+      <div className="relative h-fit w-full">
+        <Skeleton className="aspect-video w-full rounded-none" />
       </div>
-      <CardContent className="p-4">
-        <Skeleton className="h-6 w-3/4 mb-2 rounded" />
-        <Skeleton className="h-4 w-full mb-4 rounded" />
-        <div className="mt-4 flex items-center gap-x-5">
-          <div className="flex items-center gap-x-2">
-            <Skeleton className="size-6 rounded-md" />
-            <Skeleton className="h-4 w-10 rounded" />
-          </div>
-          <div className="flex items-center gap-x-2">
-            <Skeleton className="size-6 rounded-md" />
-            <Skeleton className="h-4 w-10 rounded" />
-          </div>
+      <CardContent className="flex flex-col gap-3 p-[18px]">
+        <Skeleton className="h-6 w-3/4 rounded" />
+        <Skeleton className="h-4 w-full rounded" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-6 w-14 rounded-full" />
         </div>
-
-        <Skeleton className="mt-4 h-10 w-full rounded" />
+        <div className="flex items-center gap-x-5 border-t pt-3">
+          <Skeleton className="h-4 w-10 rounded" />
+          <Skeleton className="h-4 w-16 rounded" />
+        </div>
+        <Skeleton className="h-10 w-full rounded-lg" />
       </CardContent>
     </Card>
   );

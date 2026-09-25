@@ -1,6 +1,7 @@
 import { getStudents, getStudentsStats } from "./actions";
 import { StudentsTable } from "./_components/StudentsTable";
 import { StudentsStatsCards } from "./_components/StudentsStatsCards";
+import { PageHeader } from "@/components/general/PageHeader";
 
 export default async function StudentsPage() {
   const [studentsResult, statsResult] = await Promise.all([
@@ -18,12 +19,11 @@ export default async function StudentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Students Management</h1>
-        <p className="text-muted-foreground">
-          Manage and monitor student progress across all courses
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="People"
+        title="Students Management"
+        description="Manage and monitor student progress across all courses"
+      />
       
       <StudentsStatsCards stats={stats} />
       <StudentsTable students={students} />

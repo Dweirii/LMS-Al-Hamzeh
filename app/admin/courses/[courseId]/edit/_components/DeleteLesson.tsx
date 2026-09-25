@@ -50,7 +50,12 @@ export function DeleteLesson({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Delete"
+          className="size-8 text-danger hover:bg-danger-soft hover:text-danger"
+        >
           <Trash2 className="size-4" />
         </Button>
       </AlertDialogTrigger>
@@ -64,7 +69,7 @@ export function DeleteLesson({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button onClick={onSubmit} disabled={pending}>
+          <Button variant="destructive" onClick={onSubmit} disabled={pending}>
             {pending ? "Deleting..." : "Delete"}
           </Button>
         </AlertDialogFooter>

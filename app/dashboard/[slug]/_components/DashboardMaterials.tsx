@@ -127,10 +127,10 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
 
   if (loading) {
     return (
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-xl animate-pulse">
+            <div className="p-2.5 bg-brand-soft rounded-lg animate-pulse">
               <BookOpen className="h-6 w-6 text-primary" />
             </div>
             <div>
@@ -145,14 +145,14 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
 
   if (materials.length === 0) {
     return (
-      <Card className="rounded-2xl border-0 shadow-sm">
+      <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-xl">
+            <div className="p-2.5 bg-brand-soft rounded-lg">
               <BookOpen className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold">Course Materials</CardTitle>
+              <CardTitle className="font-serif text-2xl font-medium">Course Materials</CardTitle>
               <p className="text-muted-foreground">
                 Access course materials and resources
               </p>
@@ -165,7 +165,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
             <div className="p-4 bg-muted/50 rounded-full mb-4">
               <FileText className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">No materials available</h3>
+            <h3 className="mb-2 font-serif text-lg font-medium">No materials available</h3>
             <p className="text-muted-foreground text-center">
               Course materials will appear here when they are added by the instructor.
             </p>
@@ -217,7 +217,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">File not available</h3>
+                  <h3 className="mb-2 font-serif text-lg font-medium">File not available</h3>
                   <p className="text-sm text-muted-foreground">
                     Unable to load the material. Please try again.
                   </p>
@@ -246,14 +246,14 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
   }
 
   return (
-    <Card className="rounded-2xl border-0 shadow-sm">
+    <Card className="rounded-xl border shadow-sm">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-xl">
+          <div className="p-2.5 bg-brand-soft rounded-lg">
             <BookOpen className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">Course Materials</CardTitle>
+            <CardTitle className="font-serif text-2xl font-medium">Course Materials</CardTitle>
             <p className="text-muted-foreground">
               Access course materials and resources
             </p>
@@ -305,13 +305,13 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
         
         <Separator />
         
-        <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800">
-          <AlertTriangle className="h-4 w-4 md:h-5 md:w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+        <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-warning-soft rounded-xl border border-transparent">
+          <AlertTriangle className="h-4 w-4 md:h-5 md:w-5 text-warning mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-xs md:text-sm font-medium text-amber-800 dark:text-amber-200">
+            <p className="text-xs md:text-sm font-medium text-warning">
               Protected Content
             </p>
-            <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300">
+            <p className="text-xs md:text-sm text-warning">
               These materials are protected and cannot be downloaded or shared.
             </p>
           </div>

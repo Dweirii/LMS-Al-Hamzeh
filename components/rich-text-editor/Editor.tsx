@@ -18,7 +18,7 @@ export function RichTextEditor({ field }: { field: any }) {
     editorProps: {
       attributes: {
         class:
-          "min-h-[300px] p-4 focus:outline-none prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert !w-full !max-w-none",
+          "min-h-[220px] p-4 focus:outline-none prose prose-sm sm:prose dark:prose-invert !w-full !max-w-none",
       },
     },
 
@@ -32,7 +32,7 @@ export function RichTextEditor({ field }: { field: any }) {
   });
 
   return (
-    <div className="w-full border border-input rounded-lg overflow-hidden dark:bg-input/30">
+    <div className="w-full border border-input rounded-lg overflow-hidden bg-card dark:bg-input/30">
       <Menubar editor={editor} />
       <EditorContent editor={editor} />
     </div>

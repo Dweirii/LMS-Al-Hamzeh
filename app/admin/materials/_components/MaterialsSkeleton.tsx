@@ -2,9 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export function MaterialsSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, index) => (
-        <Card key={index} className="rounded-2xl border-0 shadow-sm">
+        <Card key={index} className="rounded-xl border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1 min-w-0">

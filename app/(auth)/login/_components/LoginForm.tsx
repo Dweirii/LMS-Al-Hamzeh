@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
-import { GithubIcon, Loader, Loader2, Send } from "lucide-react";
+import { GithubIcon, Loader, Loader2, Mail, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -50,28 +50,32 @@ export function LoginForm() {
             toast.success("Email sent");
             router.push(`/verify-request?email=${email}`);
           },
-          onError: () => {
-            toast.error("Erorr sending email");
+          onError: (ctx) => {
+            // Show the server's reason (rate limit, blocked email, etc.) when it sends one.
+            toast.error(ctx.error.message || "Error sending email");
           },
         },
       });
     });
   }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Welcome Back!</CardTitle>
-        <CardDescription>
+    <Card className="gap-6 border-0 bg-transparent py-0 shadow-none">
+      <CardHeader className="gap-2 px-0">
+        <CardTitle className="font-serif text-4xl font-medium tracking-tight">
+          Welcome!
+        </CardTitle>
+        <CardDescription className="text-[15px]">
           Login with your Github or Email Account
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-5 px-0">
         <Button
           disabled={githubPending}
           onClick={signInWithGithub}
           className="w-full"
           variant="outline"
+          size="lg"
         >
           {githubPending ? (
             <>
@@ -86,25 +90,33 @@ export function LoginForm() {
           )}
         </Button>
 
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-          <span className="relative z-10 bg-card px-2 text-muted-foreground">
-            Or continue with
-          </span>
+        <div className="flex items-center gap-3 text-[12.5px] text-muted-foreground">
+          <span className="h-px flex-1 bg-border" />
+          Or continue with
+          <span className="h-px flex-1 bg-border" />
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3.5">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail
+                className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
             <Input
+              id="email"
+              className="h-12 pl-10"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="m@example.com"
               required
             />
+            </div>
           </div>
 
-          <Button onClick={signInWithEmail} disabled={emailPending}>
+          <Button onClick={signInWithEmail} disabled={emailPending} size="lg">
             {emailPending ? (
               <>
                 <Loader2 className="size-4 animate-spin" />

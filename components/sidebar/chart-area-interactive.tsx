@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -73,7 +73,9 @@ export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Enrollments</CardTitle>
+        <CardTitle className="font-serif text-xl font-medium">
+          Total Enrollments
+        </CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
             Total Enrollments for the last 30 days: {totalEnrollmentsNumber}
@@ -88,14 +90,20 @@ export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <BarChart
+          <AreaChart
             data={data}
             margin={{
               left: 12,
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <defs>
+              <linearGradient id="fillEnrollments" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-enrollments)" stopOpacity={0.28} />
+                <stop offset="95%" stopColor="var(--color-enrollments)" stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray="3 4" />
             <XAxis
               dataKey="date"
               tickLine={false}
@@ -126,8 +134,14 @@ export function ChartAreaInteractive({ data }: ChartAreaInteractiveProps) {
               }
             />
 
-            <Bar dataKey={"enrollments"} fill="var(--color-enrollments)" />
-          </BarChart>
+            <Area
+              dataKey={"enrollments"}
+              type="monotone"
+              fill="url(#fillEnrollments)"
+              stroke="var(--color-enrollments)"
+              strokeWidth={2.25}
+            />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>

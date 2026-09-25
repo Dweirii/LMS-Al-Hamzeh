@@ -1,37 +1,26 @@
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ShieldX } from "lucide-react";
 import Link from "next/link";
 
 export default function NotAdminRoute() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Card className="max-w-md w-full">
-        <CardHeader className="text-center">
-          <div className="bg-destructive/10 rounded-full p-4 w-fit mx-auto">
-            <ShieldX className="size-16 text-destructive" />
-          </div>
+    <div className="flex min-h-screen w-full flex-1 items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-[400px] gap-0 p-9">
+        <CardContent className="flex flex-col items-center gap-3.5 p-0 text-center">
+          <span className="flex size-[72px] items-center justify-center rounded-full bg-danger-soft text-danger">
+            <ShieldX className="size-9" strokeWidth={2} aria-hidden="true" />
+          </span>
+          <h1 className="mt-1.5 font-serif text-3xl font-medium">Access Restricted</h1>
+          <p className="max-w-[300px] text-balance text-[14.5px] leading-relaxed text-muted-foreground">
+            Hey! You are not an admin, which means you can&apos;t create any courses or stuff like that...
+          </p>
 
-          <CardTitle className="text-2xl">Access Restricted</CardTitle>
-          <CardDescription className="max-w-xs mx-auto">
-            Hey! You are not an admin, which means you can&apos;t create any
-            courses or stuff like that...
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
           <Link
             href="/"
-            className={buttonVariants({
-              className: "w-full",
-            })}
+            className={buttonVariants({ size: "lg", className: "mt-2.5 w-full" })}
           >
-            <ArrowLeft className="mr-1 size-4" />
+            <ArrowLeft className="size-4" />
             Back to home
           </Link>
         </CardContent>

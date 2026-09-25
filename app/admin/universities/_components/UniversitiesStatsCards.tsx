@@ -14,7 +14,7 @@ const UNIVERSITY_NAMES: Record<string, string> = {
 
 export function UniversitiesStatsCards({ stats }: UniversitiesStatsCardsProps) {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-5 md:grid-cols-2">
       {stats.map((stat) => {
         const metrics = [
           { label: "Courses", value: stat.totalCourses, Icon: BookOpen },
@@ -34,14 +34,26 @@ export function UniversitiesStatsCards({ stats }: UniversitiesStatsCardsProps) {
           >
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                  <Building className="h-5 w-5 text-primary" />
+                <div
+                  className={
+                    stat.university === "UJ"
+                      ? "shrink-0 rounded-xl bg-uj-soft p-3.5 text-uj"
+                      : "shrink-0 rounded-xl bg-petra-soft p-3.5 text-petra"
+                  }
+                >
+                  <Building className="h-6 w-6" />
                 </div>
                 <div className="min-w-0">
-                  <CardTitle className="text-lg truncate">
+                  <CardTitle className="truncate font-serif text-2xl font-medium">
                     {UNIVERSITY_NAMES[stat.university] ?? stat.university}
                   </CardTitle>
-                  <Badge variant="outline" className="mt-1">
+                  <Badge
+                    className={
+                      stat.university === "UJ"
+                        ? "mt-1.5 border-transparent bg-uj-soft text-uj"
+                        : "mt-1.5 border-transparent bg-petra-soft text-petra"
+                    }
+                  >
                     {stat.university}
                   </Badge>
                 </div>
@@ -49,12 +61,15 @@ export function UniversitiesStatsCards({ stats }: UniversitiesStatsCardsProps) {
             </CardHeader>
 
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 {metrics.map(({ label, value, Icon }) => (
-                  <div key={label} className="text-center">
-                    <Icon className="h-4 w-4 text-muted-foreground mx-auto mb-2" />
-                    <div className="text-2xl font-bold">{value}</div>
-                    <p className="text-xs text-muted-foreground">{label}</p>
+                  <div
+                    key={label}
+                    className="flex flex-col gap-1.5 rounded-xl bg-muted/60 p-4"
+                  >
+                    <Icon className="h-[18px] w-[18px] text-muted-foreground" />
+                    <div className="font-serif text-3xl leading-none">{value}</div>
+                    <p className="text-[12.5px] text-muted-foreground">{label}</p>
                   </div>
                 ))}
               </div>
@@ -62,7 +77,7 @@ export function UniversitiesStatsCards({ stats }: UniversitiesStatsCardsProps) {
               <div className="pt-4 border-t">
                 <div className="flex justify-between items-center gap-2 text-sm">
                   <span className="text-muted-foreground">Students per course</span>
-                  <span className="font-medium">{studentsPerCourse}</span>
+                  <span className="font-mono font-medium">{studentsPerCourse}</span>
                 </div>
               </div>
             </CardContent>

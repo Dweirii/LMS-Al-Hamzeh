@@ -4,7 +4,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useConfetti } from "@/hooks/use-confetti";
-import { ArrowLeft, CheckIcon } from "lucide-react";
+import { ArrowRight, CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -15,27 +15,24 @@ export default function PaymentSuccessfull() {
     triggerConfetti();
   }, []);
   return (
-    <div className="w-full min-h-screen flex flex-1 justify-center items-center">
-      <Card className="w-[350px]">
-        <CardContent>
-          <div className="w-full flex justify-center">
-            <CheckIcon className="size-12 p-2 bg-green-500/30 text-green-500 rounded-full" />
-          </div>
-          <div className="mt-3 text-center sm:mt-5 w-full">
-            <h2 className="text-xl font-semibold">Payment Successfull</h2>
-            <p className="text-sm mt-2 text-muted-foreground tracking-tight text-balance">
-              Congrats your payment was successfull. You should now have access
-              to the course!
-            </p>
+    <div className="flex min-h-screen w-full flex-1 items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-[400px] gap-0 p-9">
+        <CardContent className="flex flex-col items-center gap-3.5 p-0 text-center">
+          <span className="flex size-[72px] items-center justify-center rounded-full bg-success-soft text-success">
+            <CheckIcon className="size-9" strokeWidth={2} aria-hidden="true" />
+          </span>
+          <h1 className="mt-1.5 font-serif text-3xl font-medium">Payment Successful</h1>
+          <p className="max-w-[300px] text-balance text-[14.5px] leading-relaxed text-muted-foreground">
+            Congrats, your payment was successful. You should now have access to the course!
+          </p>
 
-            <Link
-              href="/dashboard"
-              className={buttonVariants({ className: "w-full mt-5" })}
-            >
-              <ArrowLeft className="size-4" />
-              Go to Dashboard
-            </Link>
-          </div>
+          <Link
+            href="/dashboard"
+            className={buttonVariants({ size: "lg", className: "mt-2.5 w-full" })}
+          >
+            <ArrowRight className="size-4" />
+            Go to Dashboard
+          </Link>
         </CardContent>
       </Card>
     </div>

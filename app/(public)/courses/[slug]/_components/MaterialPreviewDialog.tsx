@@ -82,11 +82,11 @@ export function MaterialPreviewDialog({ material }: MaterialPreviewDialogProps) 
 
   return (
     <>
-      <Card className="rounded-2xl border-0 shadow-sm hover:shadow-md transition-shadow">
+      <Card className="rounded-xl border shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-xl">
+              <div className="p-2.5 bg-brand-soft rounded-lg">
                 <FileText className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
@@ -153,7 +153,7 @@ export function MaterialPreviewDialog({ material }: MaterialPreviewDialogProps) 
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">File not available</h3>
+                  <h3 className="mb-2 font-serif text-lg font-medium">File not available</h3>
                   <p className="text-sm text-muted-foreground">
                     Unable to load the material. Please try again.
                   </p>

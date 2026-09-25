@@ -290,10 +290,10 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
     <Card
       {...getRootProps()}
       className={cn(
-        "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-64",
+        "relative h-64 w-full border-[1.5px] border-dashed bg-muted/40 shadow-none transition-colors duration-200 ease-in-out",
         isDragActive
-          ? "border-primary bg-primary/10 border-solid"
-          : "border-border hover:border-primary"
+          ? "border-solid border-primary bg-brand-soft"
+          : "border-input hover:border-primary"
       )}
     >
       <CardContent className="flex items-center justify-center h-full w-full p-4">

@@ -39,6 +39,7 @@ import {
 import { CalendarIcon, Search, Ban, UserCheck, Shield } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { StatusBadge } from "@/components/general/StatusBadge";
 import { toast } from "sonner";
 import { tryCatch } from "@/hooks/try-catch";
 import {
@@ -158,9 +159,9 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
 
   const getStatusBadge = (user: User) => {
     if (user.banned) {
-      return <Badge variant="destructive">Banned</Badge>;
+      return <StatusBadge status="Banned" />;
     }
-    return <Badge variant="default" className="bg-green-500">Active</Badge>;
+    return <StatusBadge status="Active" />;
   };
 
   const formatDate = (date: Date) => {
@@ -175,18 +176,19 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
   return (
     <div className="space-y-4">
       {/* Search and Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:max-w-[420px] sm:flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search users by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
+            aria-label="Search users"
           />
         </div>
         <Select value={filter} onValueChange={(value: FilterType) => setFilter(value)}>
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filter by status">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -198,7 +200,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
       </div>
 
       {/* Users Table */}
-      <div className="rounded-md border">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -215,8 +217,15 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-semibold text-primary">
+                      {(user.name || user.email).charAt(0).toUpperCase()}
+                    </span>
+                    <span className="font-medium">{user.name}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell>
                   <Badge variant={getRoleBadgeVariant(user.role)}>
                     {user.role || "No Role"}
@@ -236,7 +245,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                   {user.banned && user.banExpires ? (
                     <span className={cn(
                       "text-sm",
-                      isBanExpired(user.banExpires) ? "text-green-600" : "text-muted-foreground"
+                      isBanExpired(user.banExpires) ? "text-success" : "text-muted-foreground"
                     )}>
                       {isBanExpired(user.banExpires) ? "Expired" : formatDate(user.banExpires)}
                     </span>
@@ -271,6 +280,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                           <Button
                             variant="outline"
                             size="sm"
+                            className="border-transparent bg-success-soft text-success hover:bg-success-soft/80 hover:text-success"
                             onClick={() => setSelectedUser(user)}
                           >
                             <UserCheck className="h-4 w-4 mr-1" />
@@ -305,8 +315,9 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                       <Dialog open={banDialogOpen} onOpenChange={setBanDialogOpen}>
                         <DialogTrigger asChild>
                           <Button
-                            variant="destructive"
+                            variant="outline"
                             size="sm"
+                            className="border-transparent bg-danger-soft text-danger hover:bg-danger-soft/80 hover:text-danger"
                             onClick={() => setSelectedUser(user)}
                           >
                             <Ban className="h-4 w-4 mr-1" />
@@ -372,6 +383,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                               Cancel
                             </Button>
                             <Button
+                              variant="destructive"
                               onClick={handleBanUser}
                               disabled={isSubmitting || !banReason.trim()}
                             >
@@ -390,9 +402,9 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
       </div>
 
       {filteredUsers.length === 0 && (
-        <div className="text-center py-8">
-          <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">No users found</h3>
+        <div className="rounded-xl border border-dashed bg-card/60 py-12 text-center">
+          <Shield className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+          <h3 className="font-serif text-lg font-medium">No users found</h3>
           <p className="text-muted-foreground">
             {searchTerm || filter !== "all" 
               ? "Try adjusting your search or filter criteria."
