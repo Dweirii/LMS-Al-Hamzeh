@@ -3,10 +3,7 @@
 import * as React from "react";
 import {
   IconDashboard,
-  IconHelp,
   IconListDetails,
-  IconSearch,
-  IconSettings,
   IconUsers,
   IconSchool,
   IconBuilding,
@@ -15,7 +12,6 @@ import {
 import { Logo } from "@/components/general/Logo";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -67,23 +63,6 @@ const data = {
       icon: IconFiles,
     },
   ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
 };
 
 export function AppSidebar({
@@ -115,8 +94,6 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter className="p-3">
         <NavUser />
