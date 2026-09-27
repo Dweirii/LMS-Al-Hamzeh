@@ -104,7 +104,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
         <SelectContent>
           <SelectItem value="all">All Universities</SelectItem>
           <SelectItem value="UJ">University of Jordan</SelectItem>
-          <SelectItem value="PETRA">Petra University</SelectItem>
+          <SelectItem value="PETRA">University of Petra</SelectItem>
         </SelectContent>
       </Select>
 

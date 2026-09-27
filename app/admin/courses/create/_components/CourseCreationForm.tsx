@@ -252,7 +252,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
                   <SelectContent>
                     {universities.map((university) => (
                       <SelectItem key={university} value={university}>
-                        {university === "UJ" ? "University of Jordan" : "Petra University"}
+                        {university === "UJ" ? "University of Jordan" : "University of Petra"}
                       </SelectItem>
                     ))}
                   </SelectContent>

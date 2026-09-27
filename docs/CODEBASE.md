@@ -159,6 +159,9 @@ default names.
   timestamps. Extended with:
   - `stripeCustomerId` (unique, nullable) — set lazily on first checkout
   - `role` (nullable string) — `"admin"`, `"instructor"`, or `null`/other for students
+  - `adminType` (nullable string) — for admins only: `general`, `technical_support`, `call_center`,
+    `content_manager` or `finance` (`adminTypes` in `lib/zodSchemas.ts`). A label only; every admin has the
+    same access. Cleared when the user stops being an admin
   - `banned`, `banReason`, `banExpires` — from the better-auth `admin` plugin
   - relations: `sessions`, `accounts`, `courses` (courses they created), `instructorCourses` (courses they teach),
     `enrollment`, `lessonProgress`
@@ -435,8 +438,11 @@ or `lessonId` field). Callers wrap them in `tryCatch` and surface `message` thro
 
 ### `app/admin/user-management/actions.ts`
 
-- `banUserAction(id, reason, expires?)`, `unbanUserAction(id)`, `updateUserRoleAction(id, role)` — direct Prisma
-  writes to the better-auth fields, then `revalidatePath("/admin/user-management")`.
+- `banUserAction(id, reason, expires?)`, `unbanUserAction(id)` — direct Prisma writes to the better-auth fields,
+  then `revalidatePath("/admin/user-management")`.
+- `updateUserRoleAction(id, role, adminType?)` — validates with `userRoleSchema` (an admin must have an
+  `adminType`), saves `role` and `adminType` together, and nulls `adminType` for non-admins. In the table, choosing
+  Admin (or clicking an admin's type pill) opens a dialog to pick the type.
 
 ### `app/admin/instructors/actions.ts`
 

@@ -189,7 +189,7 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
             <SelectContent>
               <SelectItem value="all">All Universities</SelectItem>
               <SelectItem value="UJ">University of Jordan</SelectItem>
-              <SelectItem value="PETRA">Petra University</SelectItem>
+              <SelectItem value="PETRA">University of Petra</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -239,7 +239,7 @@ export function InstructorsTable({ instructors }: InstructorsTableProps) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="UJ">University of Jordan</SelectItem>
-                    <SelectItem value="PETRA">Petra University</SelectItem>
+                    <SelectItem value="PETRA">University of Petra</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

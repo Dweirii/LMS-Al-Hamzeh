@@ -11,12 +11,16 @@ const devOnlyImageHosts =
         { protocol: "https", hostname: "images.unsplash.com" },
       ] as const);
 
+// Public host of the Tigris bucket. Must match the host built in
+// hooks/use-construct-url.ts, or next/image rejects every thumbnail with a 400.
+const bucketHost = `${process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES ?? "gata3a"}.t3.tigrisfiles.io`;
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "gata3a.t3.tigrisfiles.io",
+        hostname: bucketHost,
       },
       ...devOnlyImageHosts,
     ],

@@ -6,6 +6,40 @@ export const courseStatus = ["Draft", "Published", "Archived"] as const;
 
 export const universities = ["UJ", "PETRA"] as const;
 
+export const userRoles = ["user", "admin", "instructor"] as const;
+
+// Kinds of admin. A label only: every admin has the same access to /admin.
+// These arrays double as the option list in the user-management role dialog.
+export const adminTypes = [
+  "general",
+  "technical_support",
+  "call_center",
+  "content_manager",
+  "finance",
+] as const;
+
+export type AdminType = (typeof adminTypes)[number];
+
+export const adminTypeDetails: Record<
+  AdminType,
+  { label: string; description: string }
+> = {
+  general: { label: "General admin", description: "Runs the platform" },
+  technical_support: {
+    label: "Technical support",
+    description: "Fixes account and access issues",
+  },
+  call_center: {
+    label: "Call center",
+    description: "Handles student calls and enrollments",
+  },
+  content_manager: {
+    label: "Content manager",
+    description: "Manages courses and materials",
+  },
+  finance: { label: "Finance", description: "Payments and enrollments" },
+};
+
 export const courseCategories = [
   "Development",
   "Business",
@@ -90,6 +124,18 @@ export const lessonSchema = z.object({
   thumbnailKey: z.string().optional(),
 });
 
+export const userRoleSchema = z
+  .object({
+    userId: z.string().min(1, { message: "Invalid user id" }),
+    role: z.enum(userRoles, { message: "Role is required" }),
+    adminType: z.enum(adminTypes).optional(),
+  })
+  .refine((value) => value.role !== "admin" || value.adminType !== undefined, {
+    message: "Choose an admin type",
+    path: ["adminType"],
+  });
+
 export type CourseSchemaType = z.infer<typeof courseSchema>;
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LessonSchemaType = z.infer<typeof lessonSchema>;
+export type UserRoleSchemaType = z.infer<typeof userRoleSchema>;

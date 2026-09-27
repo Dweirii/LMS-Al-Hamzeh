@@ -3,6 +3,7 @@
 import { requireAdmin } from "@/app/data/admin/require-admin";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
+import { AdminType, userRoleSchema } from "@/lib/zodSchemas";
 import { revalidatePath } from "next/cache";
 
 export async function banUserAction(
@@ -61,13 +62,28 @@ export async function unbanUserAction(id: string): Promise<ApiResponse> {
 
 export async function updateUserRoleAction(
   id: string,
-  role: string
+  role: string,
+  adminType?: AdminType
 ): Promise<ApiResponse> {
   await requireAdmin();
+
+  const validation = userRoleSchema.safeParse({ userId: id, role, adminType });
+  if (!validation.success) {
+    return {
+      status: "error",
+      message: validation.error.issues[0]?.message ?? "Invalid role",
+    };
+  }
+
   try {
     await prisma.user.update({
-      where: { id },
-      data: { role },
+      where: { id: validation.data.userId },
+      data: {
+        role: validation.data.role,
+        // Only admins carry a type; clear it when someone stops being an admin.
+        adminType:
+          validation.data.role === "admin" ? validation.data.adminType : null,
+      },
     });
 
     revalidatePath("/admin/user-management");

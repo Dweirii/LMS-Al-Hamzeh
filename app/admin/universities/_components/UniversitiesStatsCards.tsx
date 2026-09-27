@@ -9,7 +9,7 @@ interface UniversitiesStatsCardsProps {
 
 const UNIVERSITY_NAMES: Record<string, string> = {
   UJ: "University of Jordan",
-  PETRA: "Petra University",
+  PETRA: "University of Petra",
 };
 
 export function UniversitiesStatsCards({ stats }: UniversitiesStatsCardsProps) {

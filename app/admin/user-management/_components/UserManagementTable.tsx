@@ -36,7 +36,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Search, Ban, UserCheck, Shield } from "lucide-react";
+import {
+  CalendarIcon,
+  Search,
+  Ban,
+  UserCheck,
+  Shield,
+  ShieldCheck,
+  Wrench,
+  Headset,
+  BookOpen,
+  Receipt,
+  type LucideIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/general/StatusBadge";
@@ -47,17 +59,25 @@ import {
   unbanUserAction,
   updateUserRoleAction,
 } from "../actions";
+import type { AdminUserType } from "@/app/data/admin/admin-get-users";
+import {
+  adminTypes,
+  adminTypeDetails,
+  type AdminType,
+} from "@/lib/zodSchemas";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string | null;
-  banned: boolean | null;
-  banReason: string | null;
-  banExpires: Date | null;
-  createdAt: Date;
-}
+type User = AdminUserType;
+
+const adminTypeIcons: Record<AdminType, LucideIcon> = {
+  general: ShieldCheck,
+  technical_support: Wrench,
+  call_center: Headset,
+  content_manager: BookOpen,
+  finance: Receipt,
+};
+
+const isAdminType = (value: string | null): value is AdminType =>
+  value !== null && (adminTypes as readonly string[]).includes(value);
 
 interface UserManagementTableProps {
   users: User[];
@@ -74,6 +94,10 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
   const [banReason, setBanReason] = useState("");
   const [banExpires, setBanExpires] = useState<Date | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [adminDialogUser, setAdminDialogUser] = useState<User | null>(null);
+  const [selectedAdminType, setSelectedAdminType] = useState<AdminType | null>(
+    null
+  );
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -132,9 +156,26 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
     setIsSubmitting(false);
   };
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
+  const openAdminDialog = (user: User) => {
+    setSelectedAdminType(isAdminType(user.adminType) ? user.adminType : null);
+    setAdminDialogUser(user);
+  };
+
+  const closeAdminDialog = () => {
+    setAdminDialogUser(null);
+    setSelectedAdminType(null);
+  };
+
+  const handleRoleChange = async (user: User, newRole: string) => {
+    // Admins need a type, so choosing Admin opens the type dialog instead of
+    // saving straight away.
+    if (newRole === "admin") {
+      openAdminDialog(user);
+      return;
+    }
+
     const { data: result, error } = await tryCatch(
-      updateUserRoleAction(userId, newRole)
+      updateUserRoleAction(user.id, newRole)
     );
 
     if (error) {
@@ -144,6 +185,25 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
     } else {
       toast.error(result.message);
     }
+  };
+
+  const handleConfirmAdmin = async () => {
+    if (!adminDialogUser || !selectedAdminType) return;
+
+    setIsSubmitting(true);
+    const { data: result, error } = await tryCatch(
+      updateUserRoleAction(adminDialogUser.id, "admin", selectedAdminType)
+    );
+
+    if (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } else if (result.status === "success") {
+      toast.success(result.message);
+      closeAdminDialog();
+    } else {
+      toast.error(result.message);
+    }
+    setIsSubmitting(false);
   };
 
   const getRoleBadgeVariant = (role: string | null) => {
@@ -227,9 +287,28 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                 </TableCell>
                 <TableCell className="text-muted-foreground">{user.email}</TableCell>
                 <TableCell>
-                  <Badge variant={getRoleBadgeVariant(user.role)}>
-                    {user.role || "No Role"}
-                  </Badge>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Badge variant={getRoleBadgeVariant(user.role)}>
+                      {user.role || "No Role"}
+                    </Badge>
+                    {user.role === "admin" && (
+                      <button
+                        type="button"
+                        onClick={() => openAdminDialog(user)}
+                        title="Change admin type"
+                        className={cn(
+                          "inline-flex h-6 items-center whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors",
+                          isAdminType(user.adminType)
+                            ? "bg-brand-soft text-primary hover:bg-brand-soft/70"
+                            : "border border-dashed border-input text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {isAdminType(user.adminType)
+                          ? adminTypeDetails[user.adminType].label
+                          : "Set type"}
+                      </button>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell>{getStatusBadge(user)}</TableCell>
                 <TableCell>
@@ -261,7 +340,7 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
                     {/* Role Select */}
                     <Select
                       value={user.role || "no-role"}
-                      onValueChange={(value) => handleRoleChange(user.id, value === "no-role" ? "" : value)}
+                      onValueChange={(value) => handleRoleChange(user, value === "no-role" ? "" : value)}
                     >
                       <SelectTrigger className="w-[120px] h-8">
                         <SelectValue placeholder="Role" />
@@ -400,6 +479,89 @@ export function UserManagementTable({ users }: UserManagementTableProps) {
           </TableBody>
         </Table>
       </div>
+
+      {/* Admin type dialog — opened by choosing Admin or clicking the type pill */}
+      <Dialog
+        open={adminDialogUser !== null}
+        onOpenChange={(open) => {
+          if (!open) closeAdminDialog();
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {adminDialogUser?.role === "admin"
+                ? `Change admin type for ${adminDialogUser?.name}`
+                : `Make ${adminDialogUser?.name} an admin`}
+            </DialogTitle>
+            <DialogDescription>
+              Every admin type has full access to the admin console. The type
+              shows who does what.
+            </DialogDescription>
+          </DialogHeader>
+          <div role="radiogroup" aria-label="Admin type" className="grid gap-2">
+            {adminTypes.map((type) => {
+              const Icon = adminTypeIcons[type];
+              const isSelected = selectedAdminType === type;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => setSelectedAdminType(type)}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                    isSelected
+                      ? "border-primary bg-brand-soft"
+                      : "border-input hover:bg-muted"
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "size-[18px] shrink-0",
+                      isSelected ? "text-primary" : "text-muted-foreground"
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span className="grid flex-1">
+                    <span className="text-sm font-medium">
+                      {adminTypeDetails[type].label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {adminTypeDetails[type].description}
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      "size-4 shrink-0 rounded-full border",
+                      isSelected
+                        ? "border-[5px] border-primary"
+                        : "border-input"
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
+              );
+            })}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeAdminDialog}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmAdmin}
+              disabled={isSubmitting || !selectedAdminType}
+            >
+              {isSubmitting
+                ? "Saving..."
+                : adminDialogUser?.role === "admin"
+                  ? "Save type"
+                  : "Make admin"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {filteredUsers.length === 0 && (
         <div className="rounded-xl border border-dashed bg-card/60 py-12 text-center">

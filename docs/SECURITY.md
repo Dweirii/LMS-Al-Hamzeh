@@ -11,6 +11,10 @@ codebase.
 | Student | `user.role = null` or `"user"` | access courses they hold an **active** enrollment in |
 | Admin | `user.role = "admin"` | everything under `/admin`, all course and material management |
 
+Admins also carry an `adminType` (general, technical support, call center, content
+manager, finance). It is a label only and grants nothing: authorization still checks
+`role === "admin"` alone, so every admin type has identical access.
+
 Promote the first admin manually:
 
 ```sql

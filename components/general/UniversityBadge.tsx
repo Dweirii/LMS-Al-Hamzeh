@@ -19,7 +19,7 @@ export function UniversityBadge({
       ? "University of Jordan"
       : "UJ"
     : long
-      ? "Petra University"
+      ? "University of Petra"
       : "PETRA";
 
   return (
