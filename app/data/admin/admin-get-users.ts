@@ -22,6 +22,7 @@ export async function adminGetUsers() {
       name: true,
       email: true,
       role: true,
+      adminType: true,
       banned: true,
       banReason: true,
       banExpires: true,
@@ -29,3 +30,5 @@ export async function adminGetUsers() {
     },
   });
 }
+
+export type AdminUserType = Awaited<ReturnType<typeof adminGetUsers>>[number];
