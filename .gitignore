@@ -43,3 +43,6 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# Local notes: how to restore Stripe-only course pricing
+/STRIPE_RESTORE.md

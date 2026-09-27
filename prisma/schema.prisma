@@ -99,7 +99,8 @@ model Course {
   price            Int
   duration         Int
   level            CourseLevel   @default(Beginner)
-  stripePriceId    String        @unique
+  // Null for free courses (price 0), which never go through Stripe.
+  stripePriceId    String?       @unique
   category         String
   smallDescription String
   slug             String        @unique

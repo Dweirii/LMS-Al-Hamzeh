@@ -203,10 +203,12 @@ export default async function SlugPage({ params }: { params: Params }) {
               <div className="flex items-baseline justify-between border-b px-6 py-5">
                 <span className="text-sm text-muted-foreground">Price</span>
                 <span className="font-serif text-4xl text-foreground">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(course.price)}
+                  {course.price === 0
+                    ? "Free"
+                    : new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(course.price)}
                 </span>
               </div>
 
