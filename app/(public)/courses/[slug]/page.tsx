@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { UniversityBadge } from "@/components/general/UniversityBadge";
-import { env } from "@/lib/env";
+import { constructUrl } from "@/hooks/use-construct-url";
 import {
   IconBook,
   IconCategory,
@@ -73,7 +73,7 @@ export default async function SlugPage({ params }: { params: Params }) {
         <div className="order-1 flex min-w-0 flex-col gap-7">
           <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-thumb-1 shadow-sm">
             <Image
-              src={`https://${env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES}.t3.tigrisfiles.io/${course.fileKey}`}
+              src={constructUrl(course.fileKey)}
               alt=""
               fill
               className="object-cover"

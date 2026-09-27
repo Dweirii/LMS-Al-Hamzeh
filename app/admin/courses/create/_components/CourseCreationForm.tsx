@@ -180,7 +180,12 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
           name="fileKey"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>Thumbnail image</FormLabel>
+              <FormLabel>
+                Thumbnail image{" "}
+                <span className="font-normal text-muted-foreground">
+                  (optional, defaults to our logo)
+                </span>
+              </FormLabel>
               <FormControl>
                 <Uploader
                   fileTypeAccepted="image"
