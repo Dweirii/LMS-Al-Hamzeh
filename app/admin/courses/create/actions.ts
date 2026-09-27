@@ -87,20 +87,25 @@ export async function CreateCourse(
       };
     }
 
-    const data = await stripe.products.create({
-      name: validation.data.title,
-      description: validation.data.smallDescription,
-      default_price_data: {
-        currency: "usd",
-        unit_amount: validation.data.price * 100,
-      },
-    });
+    // Free courses skip Stripe entirely; only paid courses need a price object.
+    let stripePriceId: string | null = null;
+    if (validation.data.price > 0) {
+      const product = await stripe.products.create({
+        name: validation.data.title,
+        description: validation.data.smallDescription,
+        default_price_data: {
+          currency: "usd",
+          unit_amount: validation.data.price * 100,
+        },
+      });
+      stripePriceId = product.default_price as string;
+    }
 
     await prisma.course.create({
       data: {
         ...validation.data,
         userId: session?.user.id as string,
-        stripePriceId: data.default_price as string,
+        stripePriceId,
         instructorId: validation.data.instructorId || null,
       },
     });

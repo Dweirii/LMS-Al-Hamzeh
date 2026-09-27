@@ -33,7 +33,8 @@ export const courseSchema = z.object({
 
   price: z.coerce
     .number()
-    .min(1, { message: "Price must be a positive number" }),
+    .int({ message: "Price must be a whole number" })
+    .min(0, { message: "Price cannot be negative (use 0 for a free course)" }),
 
   duration: z.coerce
     .number()
