@@ -165,6 +165,10 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #26414f;
   --sidebar-ring: #5da3dd;
+  /* The sidebar wrapper sets its text colour above this element, from the
+     light-theme --sidebar-foreground (navy), which inherits as navy-on-navy.
+     Re-resolve it here so it uses the overridden value. */
+  color: var(--sidebar-foreground);
 }
 
 .dark .admin-shell {

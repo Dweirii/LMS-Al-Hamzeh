@@ -63,7 +63,8 @@ export const courseSchema = z.object({
     .string()
     .min(3, { message: "Description must be at least 3 characters long" }),
 
-  fileKey: z.string().min(1, { message: "File is required" }),
+  // Optional: an empty key means "no thumbnail", shown as the default logo image.
+  fileKey: z.string(),
 
   price: z.coerce
     .number()
