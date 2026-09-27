@@ -147,7 +147,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
             <SelectItem value="all">All Universities</SelectItem>
             {universities.map((university) => (
               <SelectItem key={university} value={university}>
-                {university === "UJ" ? "University of Jordan" : "Petra University"}
+                {university === "UJ" ? "University of Jordan" : "University of Petra"}
               </SelectItem>
             ))}
           </SelectContent>
@@ -201,7 +201,7 @@ export function CoursesFilters({ courses, onFilteredCourses }: CoursesFiltersPro
           )}
           {selectedUniversity !== "all" && (
             <FilterChip
-              label={`University: ${selectedUniversity === "UJ" ? "University of Jordan" : "Petra University"}`}
+              label={`University: ${selectedUniversity === "UJ" ? "University of Jordan" : "University of Petra"}`}
               onRemove={() => setSelectedUniversity("all")}
             />
           )}

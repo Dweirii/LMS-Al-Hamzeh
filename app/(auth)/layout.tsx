@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </p>
           <p className="max-w-md text-[15px] text-[#bdbec0]">
             Course videos, protected materials and progress tracking for
-            University of Jordan and Petra University students.
+            University of Jordan and University of Petra students.
           </p>
         </div>
         <div className="mt-9 flex gap-2.5">
