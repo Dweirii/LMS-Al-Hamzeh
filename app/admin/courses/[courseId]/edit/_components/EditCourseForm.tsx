@@ -139,7 +139,7 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
             onClick={() => {
               const titleValue = form.getValues("title");
 
-              const slug = slugify(titleValue);
+              const slug = slugify(titleValue, { lower: true, strict: true });
 
               form.setValue("slug", slug, { shouldValidate: true });
             }}

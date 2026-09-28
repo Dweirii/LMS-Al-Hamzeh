@@ -91,7 +91,10 @@ export const courseSchema = z.object({
 
   slug: z
     .string()
-    .min(3, { message: "Slug must be at least 3 characters long" }),
+    .min(3, { message: "Slug must be at least 3 characters long" })
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+      message: "Slug may only contain lowercase letters, numbers and hyphens",
+    }),
 
   status: z.enum(courseStatus, {
     message: "Status is required",

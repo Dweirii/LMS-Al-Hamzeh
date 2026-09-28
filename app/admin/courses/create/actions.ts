@@ -9,6 +9,7 @@ import { stripe } from "@/lib/stripe";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import slugify from "slugify";
 import { Prisma } from "@prisma/client";
 
 export interface InstructorOption {
@@ -80,7 +81,11 @@ export async function CreateCourse(
       }
     }
 
-    const validation = courseSchema.safeParse(values);
+    // Normalise before validating so a hand-typed slug can't contain spaces or capitals.
+    const validation = courseSchema.safeParse({
+      ...values,
+      slug: slugify(String(values.slug ?? ""), { lower: true, strict: true }),
+    });
 
     if (!validation.success) {
       return {

@@ -13,6 +13,7 @@ import {
   lessonSchema,
 } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import slugify from "slugify";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -50,7 +51,11 @@ export async function editCourse(
       }
     }
 
-    const result = courseSchema.safeParse(data);
+    // Normalise before validating so a hand-typed slug can't contain spaces or capitals.
+    const result = courseSchema.safeParse({
+      ...data,
+      slug: slugify(String(data.slug ?? ""), { lower: true, strict: true }),
+    });
 
     if (!result.success) {
       return {
