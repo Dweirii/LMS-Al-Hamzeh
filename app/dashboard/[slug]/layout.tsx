@@ -22,7 +22,7 @@ export default async function CourseLayout({ children, params }: iAppProps) {
       </div>
 
       {/* Desktop Sidebar - Hidden on mobile */}
-      <div className="hidden w-[340px] shrink-0 border-r border-border bg-card lg:block">
+      <div className="hidden w-[340px] shrink-0 border-r border-border bg-card lg:sticky lg:top-(--header-height) lg:block lg:h-[calc(100svh-var(--header-height))] lg:self-start">
         <CourseSidebar course={course.course} />
       </div>
 

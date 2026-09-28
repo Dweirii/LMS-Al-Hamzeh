@@ -22,7 +22,7 @@ import { toast } from "sonner";
 type PdfJs = typeof import("pdfjs-dist");
 let pdfjsPromise: Promise<PdfJs> | null = null;
 
-function loadPdfJs(): Promise<PdfJs> {
+export function loadPdfJs(): Promise<PdfJs> {
   if (!pdfjsPromise) {
     pdfjsPromise = import("pdfjs-dist").then((lib) => {
       lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
@@ -45,7 +45,9 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
   const [pdfDocument, setPdfDocument] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  // User zoom on top of fitScale, so 100% means "fit to width".
   const [scale, setScale] = useState(1.0);
+  const [fitScale, setFitScale] = useState<number | null>(null);
   const [rotation, setRotation] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -84,22 +86,51 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
     loadPDF();
   }, [pdfUrl]);
 
+  // Fit the page to the container width, and refit whenever the container resizes.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!pdfDocument || !container) return;
+
+    let cancelled = false;
+    let pageWidth = 0;
+    const fit = () => {
+      if (pageWidth > 0) setFitScale(container.clientWidth / pageWidth);
+    };
+    const observer = new ResizeObserver(fit);
+
+    (async () => {
+      const page = await pdfDocument.getPage(currentPage);
+      if (cancelled) return;
+      pageWidth = page.getViewport({ scale: 1, rotation }).width;
+      fit();
+      observer.observe(container);
+    })();
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
+  }, [pdfDocument, currentPage, rotation]);
+
   // Render current page
   useEffect(() => {
-    if (!pdfDocument || !canvasRef.current) return;
+    if (!pdfDocument || !canvasRef.current || fitScale === null) return;
+
+    let cancelled = false;
+    let renderTask: { cancel: () => void } | null = null;
 
     const renderPage = async () => {
       try {
         const page = await pdfDocument.getPage(currentPage);
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas || cancelled) return;
 
         const context = canvas.getContext('2d');
         if (!context) return;
 
         // Calculate viewport
         const viewport = page.getViewport({ 
-          scale: scale, 
+          scale: scale * fitScale,
           rotation: rotation 
         });
 
@@ -113,15 +144,24 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
           viewport: viewport,
         };
 
-        await page.render(renderContext).promise;
+        const task = page.render(renderContext);
+        renderTask = task;
+        await task.promise;
       } catch (err) {
+        // A resize or zoom cancelled this render in favour of a newer one.
+        if ((err as { name?: string })?.name === 'RenderingCancelledException') return;
         console.error('Error rendering page:', err);
         toast.error('Failed to render page');
       }
     };
 
     renderPage();
-  }, [pdfDocument, currentPage, scale, rotation]);
+
+    return () => {
+      cancelled = true;
+      renderTask?.cancel();
+    };
+  }, [pdfDocument, currentPage, scale, fitScale, rotation]);
 
   // Security: Block right-click and keyboard shortcuts
   useEffect(() => {
@@ -261,8 +301,8 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
   }
 
   return (
-    <Card className={`rounded-xl border shadow-sm ${className}`}>
-      <CardHeader>
+    <Card className={`rounded-xl border shadow-sm gap-3 py-3 ${className}`}>
+      <CardHeader className="px-3 sm:px-4">
         <CardTitle className="flex items-center gap-2.5 text-base font-semibold">
           <FileText className="h-5 w-5 text-primary" />
           {title}
@@ -272,9 +312,9 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         </p>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="flex min-h-0 flex-1 flex-col px-2 sm:px-3">
         {/* Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-2 sm:p-2.5 bg-muted/60 rounded-xl">
+        <div className="flex shrink-0 flex-col sm:flex-row items-center justify-between gap-3 mb-2 p-2 sm:p-2.5 bg-muted/60 rounded-xl">
           <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
             <Button
               variant="outline"
@@ -325,22 +365,20 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
         {/* PDF Canvas */}
         <div 
           ref={containerRef}
-          className="border rounded-xl overflow-auto bg-muted/40"
-          style={{ maxHeight: '70vh' }}
+          className="min-h-0 flex-1 border rounded-xl overflow-auto bg-muted/40"
           tabIndex={0}
         >
           <canvas
             ref={canvasRef}
             className="block mx-auto"
             style={{ 
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              margin: '20px auto'
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}
           />
         </div>
 
         {/* Security Warning */}
-        <div className="mt-3 md:mt-4 p-2 md:p-3 bg-warning-soft rounded-lg border border-transparent">
+        <div className="mt-2 shrink-0 p-2 md:p-3 bg-warning-soft rounded-lg border border-transparent">
           <div className="flex items-center gap-2 text-xs md:text-sm text-warning">
             <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
             <span className="font-medium">Protected Content</span>

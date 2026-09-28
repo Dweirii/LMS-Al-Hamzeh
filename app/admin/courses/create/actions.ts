@@ -2,12 +2,15 @@
 
 import { requireAdmin } from "@/app/data/admin/require-admin";
 import arcjet, { fixedWindow } from "@/lib/arcjet";
+import { getUniqueCourseSlug } from "@/lib/course-slug";
 
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import slugify from "slugify";
+import { Prisma } from "@prisma/client";
 
 export interface InstructorOption {
   id: string;
@@ -78,7 +81,11 @@ export async function CreateCourse(
       }
     }
 
-    const validation = courseSchema.safeParse(values);
+    // Normalise before validating so a hand-typed slug can't contain spaces or capitals.
+    const validation = courseSchema.safeParse({
+      ...values,
+      slug: slugify(String(values.slug ?? ""), { lower: true, strict: true }),
+    });
 
     if (!validation.success) {
       return {
@@ -86,6 +93,9 @@ export async function CreateCourse(
         message: "Invalid Form Data",
       };
     }
+
+    // Resolve the slug before Stripe so a clash never leaves an orphan product.
+    const slug = await getUniqueCourseSlug(validation.data.slug);
 
     // Free courses skip Stripe entirely; only paid courses need a price object.
     let stripePriceId: string | null = null;
@@ -104,6 +114,7 @@ export async function CreateCourse(
     await prisma.course.create({
       data: {
         ...validation.data,
+        slug,
         userId: session?.user.id as string,
         stripePriceId,
         instructorId: validation.data.instructorId || null,
@@ -114,7 +125,16 @@ export async function CreateCourse(
       status: "success",
       message: "Course created successfully",
     };
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        status: "error",
+        message: "A course with this slug already exists. Please try again.",
+      };
+    }
     return {
       status: "error",
       message: "Failed to create course",

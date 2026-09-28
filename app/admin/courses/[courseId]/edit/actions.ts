@@ -2,6 +2,7 @@
 
 import { requireAdmin } from "@/app/data/admin/require-admin";
 import arcjet, { fixedWindow } from "@/lib/arcjet";
+import { getUniqueCourseSlug } from "@/lib/course-slug";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
 import {
@@ -12,6 +13,8 @@ import {
   lessonSchema,
 } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import slugify from "slugify";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 const aj = arcjet.withRule(
@@ -48,7 +51,11 @@ export async function editCourse(
       }
     }
 
-    const result = courseSchema.safeParse(data);
+    // Normalise before validating so a hand-typed slug can't contain spaces or capitals.
+    const result = courseSchema.safeParse({
+      ...data,
+      slug: slugify(String(data.slug ?? ""), { lower: true, strict: true }),
+    });
 
     if (!result.success) {
       return {
@@ -57,6 +64,8 @@ export async function editCourse(
       };
     }
 
+    const slug = await getUniqueCourseSlug(result.data.slug, courseId);
+
     await prisma.course.update({
       where: {
         id: courseId,
@@ -64,6 +73,7 @@ export async function editCourse(
       },
       data: {
         ...result.data,
+        slug,
       },
     });
 
@@ -71,7 +81,16 @@ export async function editCourse(
       status: "success",
       message: "Course updated successfully",
     };
-  } catch {
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        status: "error",
+        message: "A course with this slug already exists. Please try again.",
+      };
+    }
     return {
       status: "error",
       message: "Failed to update Course",

@@ -18,9 +18,10 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="sidebar" />
+      {/* "icon" collapses to a rail instead of hiding the student nav entirely. */}
+      <AppSidebar variant="sidebar" collapsible="icon" />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader className="sticky top-0 z-30" />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-6 px-4 py-6 md:gap-7 lg:px-9 lg:py-8">

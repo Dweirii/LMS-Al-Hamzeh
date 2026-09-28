@@ -135,7 +135,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
             className="w-fit"
             onClick={() => {
               const titleValue = form.getValues("title");
-              const slug = slugify(titleValue);
+              const slug = slugify(titleValue, { lower: true, strict: true });
               form.setValue("slug", slug, { shouldValidate: true });
             }}
           >

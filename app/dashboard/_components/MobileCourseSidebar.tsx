@@ -15,9 +15,10 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
-import { ChevronDown, Play, Menu, BookOpen } from "lucide-react";
+import { ChevronDown, Play, Menu, BookOpen, ArrowLeft } from "lucide-react";
 import { LessonItem } from "./LessonItem";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useCourseProgress } from "@/hooks/use-course-progress";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -28,21 +29,21 @@ interface iAppProps {
 
 export function MobileCourseSidebar({ course }: iAppProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const currentLessonId = pathname.split("/").pop();
   const [open, setOpen] = useState(false);
 
   const { completedLessons, totalLessons, progressPercentage } =
     useCourseProgress({ courseData: course });
-  
-  const handleViewMaterials = () => {
-    router.push(`/dashboard/${course.slug}/materials`);
-    setOpen(false);
-  };
 
   return (
-    <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <div className="sticky top-(--header-height) z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="flex items-center justify-between p-3 gap-2">
+        <Button asChild variant="ghost" size="sm" className="shrink-0">
+          <Link href="/dashboard" aria-label="Back to my courses">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+
         {/* Course Title */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <div className="size-8 rounded-lg bg-brand-soft flex items-center justify-center shrink-0">
@@ -164,14 +165,19 @@ export function MobileCourseSidebar({ course }: iAppProps) {
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground mb-3">Quick Access</p>
                   <Button
-                    onClick={handleViewMaterials}
+                    asChild
                     variant="outline"
                     className="w-full gap-2 h-auto py-2.5 justify-start hover:bg-primary/5"
                   >
-                    <div className="p-1.5 bg-brand-soft rounded-lg">
-                      <BookOpen className="h-3.5 w-3.5 text-primary" />
-                    </div>
-                    <span className="text-sm">Course Materials</span>
+                    <Link
+                      href={`/dashboard/${course.slug}/materials`}
+                      onClick={() => setOpen(false)}
+                    >
+                      <div className="p-1.5 bg-brand-soft rounded-lg">
+                        <BookOpen className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                      <span className="text-sm">Course Materials</span>
+                    </Link>
                   </Button>
                 </div>
               </div>
