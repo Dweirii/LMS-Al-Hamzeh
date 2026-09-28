@@ -2,9 +2,11 @@
 
 import { Fragment } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { BreadcrumbLink } from "@/components/ui/breadcrumb";
 import { ThemeToggle } from "../ui/themeToggle";
 import { cn } from "@/lib/utils";
 
@@ -33,9 +35,23 @@ function toLabel(segment: string) {
     .join(" ");
 }
 
+// The href for the crumb ending at segments[index], or null when that prefix has no
+// page: /admin/courses/<courseId> goes to its edit page, and a chapter id
+// (/admin/courses/<courseId>/<chapterId>) has nowhere to go.
+function toHref(segments: string[], index: number) {
+  const path = segments.slice(0, index + 1);
+  const href = `/${path.join("/")}`;
+  if (path[0] === "admin" && path[1] === "courses" && ID_PATTERN.test(path[2] ?? "")) {
+    if (path.length === 3) return `${href}/edit`;
+    if (path.length === 4 && ID_PATTERN.test(path[3])) return null;
+  }
+  return href;
+}
+
 export function SiteHeader({ className }: { className?: string }) {
   const pathname = usePathname();
-  const crumbs = pathname.split("/").filter(Boolean).map(toLabel);
+  const segments = pathname.split("/").filter(Boolean);
+  const crumbs = segments.map(toLabel);
 
   return (
     <header
@@ -56,6 +72,7 @@ export function SiteHeader({ className }: { className?: string }) {
         >
           {crumbs.map((crumb, index) => {
             const isLast = index === crumbs.length - 1;
+            const href = isLast ? null : toHref(segments, index);
             return (
               <Fragment key={`${crumb}-${index}`}>
                 {index > 0 && (
@@ -64,16 +81,22 @@ export function SiteHeader({ className }: { className?: string }) {
                     aria-hidden="true"
                   />
                 )}
-                <span
-                  className={
-                    isLast
-                      ? "truncate font-medium text-foreground"
-                      : "truncate text-muted-foreground"
-                  }
-                  aria-current={isLast ? "page" : undefined}
-                >
-                  {crumb}
-                </span>
+                {href ? (
+                  <BreadcrumbLink asChild className="truncate text-muted-foreground">
+                    <Link href={href}>{crumb}</Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <span
+                    className={
+                      isLast
+                        ? "truncate font-medium text-foreground"
+                        : "truncate text-muted-foreground"
+                    }
+                    aria-current={isLast ? "page" : undefined}
+                  >
+                    {crumb}
+                  </span>
+                )}
               </Fragment>
             );
           })}
