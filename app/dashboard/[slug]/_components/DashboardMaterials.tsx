@@ -15,7 +15,8 @@ import {
   Maximize2
 } from "lucide-react";
 import { toast } from "sonner";
-import { SecurePDFViewer } from "@/components/ui/SecurePDFViewer";
+import { SecurePDFViewer, loadPdfJs } from "@/components/ui/SecurePDFViewer";
+import { MaterialsSkeleton } from "@/app/admin/materials/_components/MaterialsSkeleton";
 
 interface Material {
   id: string;
@@ -60,6 +61,8 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
     setLoadingPdf(true);
     setPdfError(false);
     setPdfUrl(null);
+    // Start downloading pdf.js now instead of after the signed URL comes back.
+    void loadPdfJs();
 
     try {
       const response = await fetch(`/api/materials/${material.id}/view`);
@@ -126,21 +129,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
   }, [viewingMaterial, handleKeyDown, handleContextMenu]);
 
   if (loading) {
-    return (
-      <Card className="rounded-xl border shadow-sm">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-brand-soft rounded-lg animate-pulse">
-              <BookOpen className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <div className="h-6 w-48 bg-muted rounded animate-pulse" />
-              <div className="h-4 w-64 bg-muted rounded animate-pulse mt-2" />
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-    );
+    return <MaterialsSkeleton />;
   }
 
   if (materials.length === 0) {

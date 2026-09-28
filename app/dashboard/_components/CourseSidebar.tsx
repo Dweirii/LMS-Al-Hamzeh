@@ -10,7 +10,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { ChevronDown, Play, BookOpen } from "lucide-react";
 import { LessonItem } from "./LessonItem";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useCourseProgress } from "@/hooks/use-course-progress";
 
 interface iAppProps {
@@ -19,15 +20,11 @@ interface iAppProps {
 
 export function CourseSidebar({ course }: iAppProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const currentLessonId = pathname.split("/").pop();
 
   const { completedLessons, totalLessons, progressPercentage } =
     useCourseProgress({ courseData: course });
-  
-  const handleViewMaterials = () => {
-    router.push(`/dashboard/${course.slug}/materials`);
-  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-col gap-3.5 border-b border-border p-5">
@@ -102,13 +99,11 @@ export function CourseSidebar({ course }: iAppProps) {
 
       {/* Materials Section */}
       <div className="mt-auto border-t border-border p-3.5">
-        <Button
-          onClick={handleViewMaterials}
-          variant="outline"
-          className="w-full gap-2"
-        >
-          <BookOpen className="h-4 w-4" />
-          <span>Course Materials</span>
+        <Button asChild variant="outline" className="w-full gap-2">
+          <Link href={`/dashboard/${course.slug}/materials`}>
+            <BookOpen className="h-4 w-4" />
+            <span>Course Materials</span>
+          </Link>
         </Button>
       </div>
     </div>

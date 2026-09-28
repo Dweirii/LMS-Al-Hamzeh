@@ -22,7 +22,7 @@ import { toast } from "sonner";
 type PdfJs = typeof import("pdfjs-dist");
 let pdfjsPromise: Promise<PdfJs> | null = null;
 
-function loadPdfJs(): Promise<PdfJs> {
+export function loadPdfJs(): Promise<PdfJs> {
   if (!pdfjsPromise) {
     pdfjsPromise = import("pdfjs-dist").then((lib) => {
       lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
