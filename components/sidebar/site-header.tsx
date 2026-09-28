@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeToggle } from "../ui/themeToggle";
+import { cn } from "@/lib/utils";
 
 const SEGMENT_LABELS: Record<string, string> = {
   admin: "Admin",
@@ -32,12 +33,17 @@ function toLabel(segment: string) {
     .join(" ");
 }
 
-export function SiteHeader() {
+export function SiteHeader({ className }: { className?: string }) {
   const pathname = usePathname();
   const crumbs = pathname.split("/").filter(Boolean).map(toLabel);
 
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header
+      className={cn(
+        "flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)",
+        className
+      )}
+    >
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="-ml-1" />
         <Separator
