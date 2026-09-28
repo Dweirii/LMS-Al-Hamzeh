@@ -192,7 +192,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
           </div>
 
           {/* PDF Viewer */}
-          <div className="flex-1 bg-muted/30">
+          <div className="flex-1 min-h-0 bg-muted/30">
             {loadingPdf && (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
