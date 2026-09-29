@@ -125,7 +125,16 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
               <FormItem className="w-full">
                 <FormLabel>Slug</FormLabel>
                 <FormControl>
-                  <Input placeholder="Slug" {...field} />
+                  <Input
+                    placeholder="Slug"
+                    {...field}
+                    // Tidy a hand-typed slug (spaces, capitals, double or trailing
+                    // hyphens) the same way the server will, so the admin sees what is saved.
+                    onBlur={() => {
+                      field.onChange(slugify(field.value ?? "", { lower: true, strict: true }));
+                      field.onBlur();
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

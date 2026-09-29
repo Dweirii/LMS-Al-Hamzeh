@@ -26,6 +26,24 @@ interface UploaderState {
   fileType: "image" | "video";
 }
 
+// Leaving the page unmounts the uploader, and the uploaded key never reaches the form.
+const LEAVE_WARNING = "An upload is in progress. Leaving this page will cancel it.";
+
+// Keeps the surrounding form's submit button disabled while any uploader in it is busy.
+function setFormUploading(form: HTMLFormElement | null, uploading: boolean) {
+  if (!form) return;
+  const count = Math.max(
+    Number(form.dataset.uploading ?? 0) + (uploading ? 1 : -1),
+    0
+  );
+  form.dataset.uploading = String(count);
+  form
+    .querySelectorAll<HTMLButtonElement>('button[type="submit"]')
+    .forEach((button) => {
+      button.disabled = count > 0;
+    });
+}
+
 interface iAppProps {
   value?: string;
   onChange?: (value: string) => void;
@@ -275,7 +293,7 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
     };
   }, [fileState.objectUrl]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, rootRef } = useDropzone({
     onDrop,
     accept:
       fileTypeAccepted === "video" ? { "video/*": [] } : { "image/*": [] },
@@ -286,6 +304,69 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
     onDropRejected: rejectedFiles,
     disabled: fileState.uploading || !!fileState.objectUrl,
   });
+
+  useEffect(() => {
+    if (!fileState.uploading) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    // Capture phase, so this runs before next/link starts a client-side navigation.
+    const handleLinkClick = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+      const anchor = (event.target as Element | null)?.closest?.("a[href]");
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+      if (anchor.target === "_blank" || anchor.hasAttribute("download")) return;
+      // External links unload the page, which beforeunload already covers.
+      if (anchor.origin !== window.location.origin) return;
+      if (
+        anchor.pathname === window.location.pathname &&
+        anchor.search === window.location.search
+      ) {
+        return;
+      }
+      if (!window.confirm(LEAVE_WARNING)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    // The browser back button is a client-side navigation too, so beforeunload never
+    // fires. By the time popstate arrives the URL has already changed; if the user
+    // stays, stop the app router's (non-capture) listener and push this page back.
+    const guardedState = window.history.state;
+    const guardedUrl = window.location.href;
+    const handlePopState = (event: PopStateEvent) => {
+      if (window.confirm(LEAVE_WARNING)) return;
+      event.stopImmediatePropagation();
+      window.history.pushState(guardedState, "", guardedUrl);
+    };
+
+    const form = rootRef.current?.closest("form") ?? null;
+    setFormUploading(form, true);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("click", handleLinkClick, true);
+    window.addEventListener("popstate", handlePopState, true);
+
+    return () => {
+      setFormUploading(form, false);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("click", handleLinkClick, true);
+      window.removeEventListener("popstate", handlePopState, true);
+    };
+  }, [fileState.uploading, rootRef]);
+
   return (
     <Card
       {...getRootProps()}
@@ -300,6 +381,14 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
         <input {...getInputProps()} />
         {renderContent()}
       </CardContent>
+      {fileState.uploading && (
+        <p
+          role="status"
+          className="absolute inset-x-3 bottom-3 rounded-md bg-warning-soft px-2 py-1.5 text-center text-xs font-medium text-warning"
+        >
+          Upload in progress — don&apos;t leave this page.
+        </p>
+      )}
     </Card>
   );
 }
