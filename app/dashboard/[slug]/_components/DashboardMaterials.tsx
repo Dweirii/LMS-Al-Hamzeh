@@ -166,35 +166,25 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
 
   if (viewingMaterial) {
     return (
-      <div className="fixed inset-0 z-50 bg-background">
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-3 md:p-4 border-b bg-background">
-            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
-              <FileText className="h-4 w-4 md:h-5 md:w-5 shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h2 className="font-semibold text-sm md:text-base truncate">{viewingMaterial.title}</h2>
-                <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-                  <AlertTriangle className="h-3 w-3" />
-                  <span className="text-xs">Protected Content</span>
-                </div>
-              </div>
-            </div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:p-4">
+        <div className="relative flex h-dvh w-full max-w-6xl flex-col overflow-hidden bg-background sm:h-[90dvh] sm:rounded-xl">
+          {/* The viewer owns the close button once it is showing; cover the states before that. */}
+          {(loadingPdf || pdfError) && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleCloseViewer}
-              className="gap-1 md:gap-2 shrink-0"
+              className="absolute right-2 top-2 z-10"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
-              <span className="hidden sm:inline">Close</span>
             </Button>
-          </div>
+          )}
 
           {/* PDF Viewer */}
-          <div className="flex-1 min-h-0 bg-muted/30">
+          <div className="flex flex-1 min-h-0 flex-col bg-muted/30">
             {loadingPdf && (
-              <div className="flex items-center justify-center h-full">
+              <div className="flex flex-1 items-center justify-center">
                 <div className="text-center">
                   <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent mb-4"></div>
                   <p className="text-sm text-muted-foreground">Loading material...</p>
@@ -203,7 +193,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
             )}
             
             {pdfError && (
-              <div className="flex items-center justify-center h-full">
+              <div className="flex flex-1 items-center justify-center">
                 <div className="text-center">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="mb-2 font-serif text-lg font-medium">File not available</h3>
@@ -225,7 +215,8 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
               <SecurePDFViewer 
                 pdfUrl={pdfUrl} 
                 title={viewingMaterial.title}
-                className="h-full border-0"
+                onClose={handleCloseViewer}
+                className="min-h-0 flex-1 rounded-none border-0 shadow-none"
               />
             )}
           </div>

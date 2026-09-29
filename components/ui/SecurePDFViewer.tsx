@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   ChevronLeft, 
   ChevronRight, 
   ZoomIn, 
   ZoomOut, 
   RotateCw,
-  FileText,
   AlertTriangle,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  ShieldCheck,
+  X
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,9 +38,10 @@ interface SecurePDFViewerProps {
   pdfUrl: string;
   title: string;
   className?: string;
+  onClose?: () => void;
 }
 
-export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFViewerProps) {
+export function SecurePDFViewer({ pdfUrl, title, className = "", onClose }: SecurePDFViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,14 +137,19 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
           rotation: rotation 
         });
 
-        // Set canvas dimensions
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        // Back the canvas with device pixels so text stays sharp on HiDPI screens,
+        // while its CSS size stays at the fitted viewport size.
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
 
         // Render page
         const renderContext = {
           canvasContext: context,
           viewport: viewport,
+          transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined,
         };
 
         const task = page.render(renderContext);
@@ -269,9 +277,16 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
     }, 100);
   };
 
+  const closeButton = onClose && (
+    <Button variant="ghost" size="sm" onClick={onClose} className="h-8 shrink-0" aria-label="Close">
+      <X className="h-4 w-4" />
+    </Button>
+  );
+
   if (loading) {
     return (
-      <Card className={`rounded-xl border shadow-sm ${className}`}>
+      <Card className={`relative rounded-xl border shadow-sm ${className}`}>
+        {closeButton && <div className="absolute right-2 top-2">{closeButton}</div>}
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
@@ -284,7 +299,8 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
 
   if (error) {
     return (
-      <Card className={`rounded-xl border shadow-sm ${className}`}>
+      <Card className={`relative rounded-xl border shadow-sm ${className}`}>
+        {closeButton && <div className="absolute right-2 top-2">{closeButton}</div>}
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
@@ -301,21 +317,11 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
   }
 
   return (
-    <Card className={`rounded-xl border shadow-sm gap-3 py-3 ${className}`}>
-      <CardHeader className="px-3 sm:px-4">
-        <CardTitle className="flex items-center gap-2.5 text-base font-semibold">
-          <FileText className="h-5 w-5 text-primary" />
-          {title}
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Page {currentPage} of {totalPages}
-        </p>
-      </CardHeader>
-      
+    <Card className={`rounded-xl border shadow-sm gap-0 py-2 ${className}`}>
       <CardContent className="flex min-h-0 flex-1 flex-col px-2 sm:px-3">
         {/* Controls */}
-        <div className="flex shrink-0 flex-col sm:flex-row items-center justify-between gap-3 mb-2 p-2 sm:p-2.5 bg-muted/60 rounded-xl">
-          <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
+        <div className="flex shrink-0 items-center justify-between gap-1 sm:gap-3 mb-2 p-1 sm:p-1.5 bg-muted/60 rounded-xl">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -343,12 +349,12 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
             </Button>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Button variant="outline" size="sm" onClick={zoomOut} className="h-8">
               <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
             
-            <span className="text-xs sm:text-sm font-medium px-1 sm:px-2 min-w-[50px] text-center">
+            <span className="text-xs sm:text-sm font-medium px-1 sm:px-2 sm:min-w-[50px] text-center">
               {Math.round(scale * 100)}%
             </span>
             
@@ -359,6 +365,19 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
             <Button variant="outline" size="sm" onClick={rotate} className="h-8">
               <RotateCw className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="hidden sm:inline-flex px-1 text-warning" aria-label="Protected content">
+                  <ShieldCheck className="h-4 w-4" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Protected content: right-click, printing and downloading are disabled.
+              </TooltipContent>
+            </Tooltip>
+
+            {closeButton}
           </div>
         </div>
 
@@ -367,6 +386,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
           ref={containerRef}
           className="min-h-0 flex-1 border rounded-xl overflow-auto bg-muted/40"
           tabIndex={0}
+          aria-label={title}
         >
           <canvas
             ref={canvasRef}
@@ -377,16 +397,6 @@ export function SecurePDFViewer({ pdfUrl, title, className = "" }: SecurePDFView
           />
         </div>
 
-        {/* Security Warning */}
-        <div className="mt-2 shrink-0 p-2 md:p-3 bg-warning-soft rounded-lg border border-transparent">
-          <div className="flex items-center gap-2 text-xs md:text-sm text-warning">
-            <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
-            <span className="font-medium">Protected Content</span>
-          </div>
-          <p className="text-xs md:text-sm text-warning mt-1">
-            This PDF is protected. Right-click, printing, and downloading are disabled.
-          </p>
-        </div>
       </CardContent>
     </Card>
   );
