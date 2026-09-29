@@ -166,8 +166,8 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
 
   if (viewingMaterial) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:p-4">
-        <div className="relative flex h-dvh w-full max-w-6xl flex-col overflow-hidden bg-background sm:h-[90dvh] sm:rounded-xl">
+      <div className="fixed inset-0 z-50 bg-background">
+        <div className="relative flex h-dvh w-full flex-col overflow-hidden">
           {/* The viewer owns the close button once it is showing; cover the states before that. */}
           {(loadingPdf || pdfError) && (
             <Button

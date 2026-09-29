@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { IconDashboard } from "@tabler/icons-react";
+import { IconDashboard, IconHome, IconSchool } from "@tabler/icons-react";
 import { Logo } from "@/components/general/Logo";
 
 import { NavMain } from "@/components/sidebar/nav-main";
@@ -19,6 +19,16 @@ import Link from "next/link";
 
 const data = {
   navMain: [
+    {
+      title: "Home",
+      url: "/",
+      icon: IconHome,
+    },
+    {
+      title: "Courses",
+      url: "/courses",
+      icon: IconSchool,
+    },
     {
       title: "Dashboard",
       url: "/dashboard",
