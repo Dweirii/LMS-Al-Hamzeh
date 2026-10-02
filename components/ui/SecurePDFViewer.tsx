@@ -1,5 +1,6 @@
 "use client";
 
+import { PdfSkeleton } from "@/components/general/Skeletons";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +12,6 @@ import {
   ZoomOut, 
   RotateCw,
   AlertTriangle,
-  Loader2,
   RefreshCw,
   ShieldCheck,
   X
@@ -287,12 +287,7 @@ export function SecurePDFViewer({ pdfUrl, title, className = "", onClose }: Secu
     return (
       <Card className={`relative rounded-xl border shadow-sm ${className}`}>
         {closeButton && <div className="absolute right-2 top-2">{closeButton}</div>}
-        <CardContent className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-            <p className="text-muted-foreground">Loading PDF...</p>
-          </div>
-        </CardContent>
+        <PdfSkeleton />
       </Card>
     );
   }

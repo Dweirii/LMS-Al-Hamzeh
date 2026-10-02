@@ -1,4 +1,6 @@
 "use client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PdfSkeleton } from "@/components/general/Skeletons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/general/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -146,15 +148,7 @@ export function MaterialDetails({ materialId }: MaterialDetailsProps) {
         />
       ) : (
         <Card className="rounded-xl border shadow-sm">
-          <CardContent className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="mb-2 font-serif text-lg font-medium">Loading PDF...</h3>
-              <p className="text-muted-foreground">
-                Preparing secure PDF viewer...
-              </p>
-            </div>
-          </CardContent>
+          <PdfSkeleton />
         </Card>
       )}
     </div>
@@ -165,32 +159,32 @@ export function MaterialSkeleton() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <div className="h-8 w-24 bg-muted rounded" />
+        <Skeleton className="h-8 w-24" />
       </div>
 
       <Card className="rounded-xl border shadow-sm">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-muted rounded-xl" />
+              <Skeleton className="h-10 w-10 rounded-xl" />
               <div>
-                <div className="h-6 bg-muted rounded w-48 mb-2" />
-                <div className="h-4 bg-muted rounded w-32" />
+                <Skeleton className="h-6 w-48 mb-2" />
+                <Skeleton className="h-4 w-32" />
               </div>
             </div>
-            <div className="h-6 w-16 bg-muted rounded" />
+            <Skeleton className="h-6 w-16" />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <Separator />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="h-4 bg-muted rounded w-40" />
-              <div className="h-4 bg-muted rounded w-32" />
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-4 w-32" />
             </div>
             <div className="flex flex-col gap-3">
-              <div className="h-10 bg-muted rounded" />
-              <div className="h-10 bg-muted rounded" />
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
             </div>
           </div>
         </CardContent>
@@ -198,10 +192,10 @@ export function MaterialSkeleton() {
 
       <Card className="rounded-xl border shadow-sm">
         <CardHeader>
-          <div className="h-6 bg-muted rounded w-32" />
+          <Skeleton className="h-6 w-32" />
         </CardHeader>
         <CardContent>
-          <div className="aspect-[4/3] bg-muted/50 rounded-xl" />
+          <Skeleton className="aspect-[4/3] rounded-xl" />
         </CardContent>
       </Card>
     </div>
