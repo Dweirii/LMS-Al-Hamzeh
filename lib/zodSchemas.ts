@@ -41,17 +41,12 @@ export const adminTypeDetails: Record<
 };
 
 export const courseCategories = [
-  "Development",
+  "Medicine",
+  "Dental",
+  "Pharmacy",
+  "Engineering",
+  "IT",
   "Business",
-  "Finance",
-  "IT & Software",
-  "Office Productivity",
-  "Personal Development",
-  "Design",
-  "Marketing",
-  "Health & Fitness",
-  "Music",
-  "Teaching & Academics",
 ] as const;
 
 export const courseSchema = z.object({

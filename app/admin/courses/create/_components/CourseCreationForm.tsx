@@ -58,7 +58,7 @@ export function CourseCreationForm({ instructors }: CourseCreationFormProps) {
       price: 0,
       duration: 0,
       level: "Beginner",
-      category: "Health & Fitness",
+      category: "Medicine",
       status: "Draft",
       slug: "",
       smallDescription: "",

@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { useConstructUrl } from "@/hooks/use-construct-url";
+import { useLeaveGuard } from "@/hooks/use-leave-guard";
 
 interface UploaderState {
   id: string | null;
@@ -305,65 +306,16 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
     disabled: fileState.uploading || !!fileState.objectUrl,
   });
 
+  useLeaveGuard(fileState.uploading, LEAVE_WARNING);
+
   useEffect(() => {
     if (!fileState.uploading) return;
 
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-
-    // Capture phase, so this runs before next/link starts a client-side navigation.
-    const handleLinkClick = (event: MouseEvent) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      ) {
-        return;
-      }
-      const anchor = (event.target as Element | null)?.closest?.("a[href]");
-      if (!(anchor instanceof HTMLAnchorElement)) return;
-      if (anchor.target === "_blank" || anchor.hasAttribute("download")) return;
-      // External links unload the page, which beforeunload already covers.
-      if (anchor.origin !== window.location.origin) return;
-      if (
-        anchor.pathname === window.location.pathname &&
-        anchor.search === window.location.search
-      ) {
-        return;
-      }
-      if (!window.confirm(LEAVE_WARNING)) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    };
-
-    // The browser back button is a client-side navigation too, so beforeunload never
-    // fires. By the time popstate arrives the URL has already changed; if the user
-    // stays, stop the app router's (non-capture) listener and push this page back.
-    const guardedState = window.history.state;
-    const guardedUrl = window.location.href;
-    const handlePopState = (event: PopStateEvent) => {
-      if (window.confirm(LEAVE_WARNING)) return;
-      event.stopImmediatePropagation();
-      window.history.pushState(guardedState, "", guardedUrl);
-    };
-
     const form = rootRef.current?.closest("form") ?? null;
     setFormUploading(form, true);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    document.addEventListener("click", handleLinkClick, true);
-    window.addEventListener("popstate", handlePopState, true);
 
     return () => {
       setFormUploading(form, false);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("click", handleLinkClick, true);
-      window.removeEventListener("popstate", handlePopState, true);
     };
   }, [fileState.uploading, rootRef]);
 

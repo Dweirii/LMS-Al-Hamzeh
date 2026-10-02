@@ -767,9 +767,7 @@ rendered in the admin `Select`s — so a new level or category is a one-line cha
 courseLevels     = ["Beginner", "Intermediate", "Advanced"]
 courseStatus     = ["Draft", "Published", "Archived"]
 universities     = ["UJ", "PETRA"]
-courseCategories = ["Development", "Business", "Finance", "IT & Software",
-                    "Office Productivity", "Personal Development", "Design",
-                    "Marketing", "Health & Fitness", "Music", "Teaching & Academics"]
+courseCategories = ["Medicine", "Dental", "Pharmacy", "Engineering", "IT", "Business"]
 ```
 
 | Schema | Fields |
