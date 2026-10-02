@@ -10,6 +10,7 @@ import Link from "next/link";
 import { StudentDetails } from "../../actions";
 import { StatusBadge } from "@/components/general/StatusBadge";
 import { StatCard } from "@/components/general/StatCard";
+import { LessonWatchProgress } from "./LessonWatchProgress";
 
 interface StudentDetailsViewProps {
   student: StudentDetails;
@@ -130,41 +131,41 @@ export function StudentDetailsView({ student }: StudentDetailsViewProps) {
           ) : (
             <div className="space-y-2.5">
               {student.enrollments.map((enrollment) => (
-                <div
-                  key={enrollment.id}
-                  className="flex flex-col gap-3 rounded-xl border p-4 transition-colors hover:bg-accent/40 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="flex-1 space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold">{enrollment.course.title}</h3>
-                      {getEnrollmentStatusBadge(enrollment.status)}
-                      {getCourseStatusBadge(enrollment.course.status)}
+                <div key={enrollment.id} className="space-y-3 rounded-xl border p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-semibold">{enrollment.course.title}</h3>
+                        {getEnrollmentStatusBadge(enrollment.status)}
+                        {getCourseStatusBadge(enrollment.course.status)}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+                        <span>Enrolled: {formatDate(enrollment.createdAt)}</span>
+                        <span aria-hidden="true">•</span>
+                        <span>
+                          {enrollment.completedLessons} of {enrollment.totalLessons} lessons completed
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <Progress
+                          value={enrollment.progressPercentage}
+                          className="h-1.5 flex-1"
+                        />
+                        <span className="min-w-[3rem] text-right font-mono text-[13px] font-medium">
+                          {enrollment.progressPercentage}%
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
-                      <span>Enrolled: {formatDate(enrollment.createdAt)}</span>
-                      <span aria-hidden="true">•</span>
-                      <span>
-                        {enrollment.completedLessons} of {enrollment.totalLessons} lessons completed
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5">
-                      <Progress
-                        value={enrollment.progressPercentage}
-                        className="h-1.5 flex-1"
-                      />
-                      <span className="min-w-[3rem] text-right font-mono text-[13px] font-medium">
-                        {enrollment.progressPercentage}%
-                      </span>
+                    <div className="sm:ml-4">
+                      <Link href={`/admin/courses/${enrollment.course.id}/edit`}>
+                        <Button variant="outline" size="sm">
+                          <ExternalLink className="h-4 w-4" />
+                          Open Course
+                        </Button>
+                      </Link>
                     </div>
                   </div>
-                  <div className="sm:ml-4">
-                    <Link href={`/admin/courses/${enrollment.course.id}/edit`}>
-                      <Button variant="outline" size="sm">
-                        <ExternalLink className="h-4 w-4" />
-                        Open Course
-                      </Button>
-                    </Link>
-                  </div>
+                  <LessonWatchProgress chapters={enrollment.chapters} />
                 </div>
               ))}
             </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { PdfSkeleton } from "@/components/general/Skeletons";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,12 +142,7 @@ export function MaterialPreviewDialog({ material }: MaterialPreviewDialogProps) 
           
           <div className="flex-1 p-6 pt-0 h-[calc(90vh-120px)]">
             {loadingPdf && (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent mb-4"></div>
-                  <p className="text-sm text-muted-foreground">Loading material...</p>
-                </div>
-              </div>
+              <PdfSkeleton className="h-full overflow-hidden" />
             )}
             
             {pdfError && (

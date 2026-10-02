@@ -1,9 +1,12 @@
 import "server-only";
 import { requireUser } from "../user/require-user";
 import { prisma } from "@/lib/db";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 
-export async function getCourseSidebarData(slug: string) {
+// Cached per request: the course layout's sidebars and the page under it all
+// ask for the same course.
+export const getCourseSidebarData = cache(async (slug: string) => {
   const session = await requireUser();
 
   const course = await prisma.course.findUnique({
@@ -71,7 +74,7 @@ export async function getCourseSidebarData(slug: string) {
   return {
     course,
   };
-}
+});
 
 export type CourseSidebarDataType = Awaited<
   ReturnType<typeof getCourseSidebarData>

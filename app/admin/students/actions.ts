@@ -3,6 +3,7 @@
 import { requireAdmin } from "@/app/data/admin/require-admin";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
+import { sanitizeRanges, WatchRange } from "@/lib/watch-progress";
 
 export interface StudentSummary {
   id: string;
@@ -14,6 +15,18 @@ export interface StudentSummary {
   totalEnrolledCourses: number;
   totalCompletedLessons: number;
   averageProgressPercentage: number;
+}
+
+export interface LessonWatchDetails {
+  id: string;
+  title: string;
+  hasVideo: boolean;
+  completed: boolean;
+  completedAt: Date | null;
+  watchedSeconds: number;
+  videoDuration: number;
+  watchedRanges: WatchRange[];
+  lastWatchedAt: Date | null;
 }
 
 export interface StudentDetails extends StudentSummary {
@@ -30,6 +43,11 @@ export interface StudentDetails extends StudentSummary {
     completedLessons: number;
     totalLessons: number;
     progressPercentage: number;
+    chapters: {
+      id: string;
+      title: string;
+      lessons: LessonWatchDetails[];
+    }[];
   }[];
 }
 
@@ -278,10 +296,16 @@ export async function getStudentDetails(studentId: string): Promise<ApiResponse 
                 slug: true,
                 status: true,
                 chapter: {
+                  orderBy: { position: "asc" },
                   select: {
+                    id: true,
+                    title: true,
                     lessons: {
+                      orderBy: { position: "asc" },
                       select: {
-                        id: true
+                        id: true,
+                        title: true,
+                        videoKey: true
                       }
                     }
                   }
@@ -290,12 +314,17 @@ export async function getStudentDetails(studentId: string): Promise<ApiResponse 
             }
           }
         },
+        // Every row, not just completed ones: rows with completed = false
+        // still carry watch time.
         lessonProgress: {
-          where: {
-            completed: true
-          },
           select: {
-            lessonId: true
+            lessonId: true,
+            completed: true,
+            completedAt: true,
+            watchedSeconds: true,
+            videoDuration: true,
+            watchedRanges: true,
+            lastWatchedAt: true
           }
         }
       }
@@ -307,6 +336,11 @@ export async function getStudentDetails(studentId: string): Promise<ApiResponse 
         message: "Student not found",
       };
     }
+
+    const progressByLesson = new Map(
+      student.lessonProgress.map(progress => [progress.lessonId, progress])
+    );
+    const completedProgress = student.lessonProgress.filter(progress => progress.completed);
 
     // Calculate stats for each enrolled course
     const enrollmentsWithStats = student.enrollment.map(enrollment => {
@@ -325,9 +359,28 @@ export async function getStudentDetails(studentId: string): Promise<ApiResponse 
         }
       }
 
-      const completedLessons = student.lessonProgress.filter(progress => 
+      const completedLessons = completedProgress.filter(progress =>
         courseLessonIds.has(progress.lessonId)
       ).length;
+
+      const chapters = enrollment.Course.chapter.map(chapter => ({
+        id: chapter.id,
+        title: chapter.title,
+        lessons: chapter.lessons.map((lesson): LessonWatchDetails => {
+          const progress = progressByLesson.get(lesson.id);
+          return {
+            id: lesson.id,
+            title: lesson.title,
+            hasVideo: Boolean(lesson.videoKey),
+            completed: progress?.completed ?? false,
+            completedAt: progress?.completedAt ?? null,
+            watchedSeconds: progress?.watchedSeconds ?? 0,
+            videoDuration: progress?.videoDuration ?? 0,
+            watchedRanges: sanitizeRanges(progress?.watchedRanges, progress?.videoDuration ?? 0),
+            lastWatchedAt: progress?.lastWatchedAt ?? null,
+          };
+        }),
+      }));
 
       const progressPercentage = totalLessons > 0 
         ? Math.round((completedLessons / totalLessons) * 100 * 100) / 100
@@ -345,13 +398,14 @@ export async function getStudentDetails(studentId: string): Promise<ApiResponse 
         createdAt: enrollment.createdAt,
         completedLessons,
         totalLessons,
-        progressPercentage
+        progressPercentage,
+        chapters
       };
     });
 
     // Calculate overall stats
     let totalLessons = 0;
-    const completedLessons = student.lessonProgress.length;
+    const completedLessons = completedProgress.length;
 
     for (const enrollment of student.enrollment) {
       for (const chapter of enrollment.Course.chapter) {

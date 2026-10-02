@@ -206,8 +206,23 @@ enum EnrollmentStatus {
 model LessonProgress {
   id        String   @id @default(uuid())
   completed Boolean  @default(false)
+  // When the student pressed "Mark as Complete". Null for older rows and for
+  // lessons that were watched but never marked.
+  completedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Video watch tracking. A row can exist with completed = false once the
+  // student starts watching, so always filter on `completed` when counting
+  // finished lessons.
+  //
+  // watchedRanges holds the merged [start, end] spans (in seconds) the student
+  // actually played, so skipping ahead does not count as watching.
+  watchedRanges  Json      @default("[]")
+  watchedSeconds Int       @default(0)
+  videoDuration  Int       @default(0)
+  lastPosition   Int       @default(0)
+  lastWatchedAt  DateTime?
 
   User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String

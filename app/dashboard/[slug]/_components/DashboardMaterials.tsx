@@ -1,5 +1,6 @@
 "use client";
 
+import { PdfSkeleton } from "@/components/general/Skeletons";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -184,12 +185,7 @@ export function DashboardMaterials({ courseId }: DashboardMaterialsProps) {
           {/* PDF Viewer */}
           <div className="flex flex-1 min-h-0 flex-col bg-muted/30">
             {loadingPdf && (
-              <div className="flex flex-1 items-center justify-center">
-                <div className="text-center">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent mb-4"></div>
-                  <p className="text-sm text-muted-foreground">Loading material...</p>
-                </div>
-              </div>
+              <PdfSkeleton className="flex-1" />
             )}
             
             {pdfError && (

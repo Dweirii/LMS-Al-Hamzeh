@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { useCourseProgress } from "@/hooks/use-course-progress";
@@ -66,6 +67,30 @@ export function CourseProgressCard({ data }: iAppProps) {
           <Play aria-hidden="true" />
           Continue learning
         </Link>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function CourseProgressCardSkeleton() {
+  return (
+    <Card className="flex-col gap-0 overflow-hidden py-0 sm:flex-row">
+      <Skeleton className="aspect-video w-full shrink-0 rounded-none sm:aspect-auto sm:w-[220px]" />
+      <CardContent className="flex min-w-0 flex-1 flex-col gap-2.5 p-5">
+        <Skeleton className="h-6 w-4/5" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-3.5 w-full" />
+          <Skeleton className="h-3.5 w-2/3" />
+        </div>
+        <div className="mt-1 flex flex-col gap-1.5">
+          <div className="flex justify-between">
+            <Skeleton className="h-3.5 w-16" />
+            <Skeleton className="h-3.5 w-10" />
+          </div>
+          <Skeleton className="h-1.5 w-full" />
+          <Skeleton className="h-3 w-36" />
+        </div>
+        <Skeleton className="mt-1.5 h-9 w-40 rounded-md" />
       </CardContent>
     </Card>
   );

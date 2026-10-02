@@ -21,11 +21,13 @@ export async function markLessonComplete(
       },
       update: {
         completed: true,
+        completedAt: new Date(),
       },
       create: {
         lessonId: lessonId,
         userId: session.id,
         completed: true,
+        completedAt: new Date(),
       },
     });
 
