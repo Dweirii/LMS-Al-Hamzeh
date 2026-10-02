@@ -35,6 +35,7 @@ import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
 import { useTransition } from "react";
 import { tryCatch } from "@/hooks/try-catch";
+import { useLeaveGuard } from "@/hooks/use-leave-guard";
 //import { CreateCourse } from "./actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -68,6 +69,12 @@ export function EditCourseForm({ data, instructors }: iAppProps) {
       university: data.university,
     },
   });
+
+  // Warn before leaving with edits that were never saved with "Update Course".
+  useLeaveGuard(
+    form.formState.isDirty && !pending,
+    "You have unsaved changes to this course. Leave without saving?"
+  );
 
   // 2. Define a submit handler.
   function onSubmit(values: CourseSchemaType) {

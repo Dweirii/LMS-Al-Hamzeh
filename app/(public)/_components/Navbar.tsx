@@ -34,10 +34,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop navigation */}
-        <nav
-          aria-label="Main"
-          className="hidden md:flex md:flex-1 md:items-center md:justify-between"
-        >
+        <nav aria-label="Main" className="hidden md:flex md:items-center">
           <div className="flex items-center gap-1">
             {navigationItems.map((item) => (
               <Link
@@ -55,8 +52,11 @@ export function Navbar() {
               </Link>
             ))}
           </div>
+        </nav>
 
-          <div className="flex items-center gap-2.5">
+        {/* Outside the desktop nav so phones still get the account menu (Home, Courses,
+            Dashboard, Logout) and the theme toggle. */}
+        <div className="ml-auto flex items-center gap-2.5">
             <ThemeToggle />
 
             {isPending ? null : session ? (
@@ -85,8 +85,7 @@ export function Navbar() {
                 </Link>
               </>
             )}
-          </div>
-        </nav>
+        </div>
       </div>
     </header>
   );
