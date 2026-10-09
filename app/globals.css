@@ -276,3 +276,29 @@ body {
     @apply text-xs font-semibold uppercase tracking-[0.12em] text-primary;
   }
 }
+
+/* Landing page motion */
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: landing-float 5s ease-in-out infinite;
+  }
+  .animate-float-slow {
+    animation: landing-float 6.5s ease-in-out 1s infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-slow {
+      animation: none;
+    }
+  }
+}
