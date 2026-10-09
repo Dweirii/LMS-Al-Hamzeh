@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { enrollInCourseAction } from "../actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export function EnrollmentButton({ courseId }: { courseId: string }) {
   const [pending, startTransition] = useTransition();
@@ -17,6 +18,10 @@ export function EnrollmentButton({ courseId }: { courseId: string }) {
       );
 
       if (error) {
+        // A successful enrollment ends in redirect(), which reaches the client
+        // as a NEXT_REDIRECT error. Next.js navigates on its own; it is not a
+        // failure, so don't show one.
+        if (isRedirectError(error)) return;
         toast.error("An unexpected error occurred. Please try again.");
         return;
       }

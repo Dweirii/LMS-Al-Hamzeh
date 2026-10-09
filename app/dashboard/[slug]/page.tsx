@@ -10,8 +10,11 @@ export default async function CourseSlugRoute({ params }: iAppProps) {
 
   const course = await getCourseSidebarData(slug);
 
-  const firstChapter = course.course.chapter[0];
-  const firstLesson = firstChapter.lessons[0];
+  // A course can have no chapters yet, or chapters with no lessons: take the
+  // first lesson in the course, wherever it is.
+  const firstLesson = course.course.chapter.find(
+    (chapter) => chapter.lessons.length > 0
+  )?.lessons[0];
 
   if (firstLesson) {
     redirect(`/dashboard/${slug}/${firstLesson.id}`);
